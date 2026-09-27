@@ -8,6 +8,7 @@ from core.models import Plan
 
 from .models import Coupon, Customer, Order, Product, Store
 from .services.ai import generate_listing
+from .services import otp
 from .services.risk import risk_score
 
 User = get_user_model()
@@ -79,6 +80,21 @@ class RiskTests(TestCase):
 
 
 class CheckoutFlowTests(TestCase):
+    def _post_checkout(self, data):
+        codes = []
+        real = otp.issue
+
+        def spy(*a, **kw):
+            codes.append(real(*a, **kw))
+            return codes[-1]
+
+        otp.issue = spy
+        try:
+            r = self.client.post(reverse("storefront:checkout", args=[self.store.slug]), data)
+        finally:
+            otp.issue = real
+        return r, (codes[-1] if codes else None)
+
     def setUp(self):
         _, self.store = make_store(delivery_fee_dhaka=60, delivery_fee_outside=120)
         self.product = Product.objects.create(store=self.store, title="Kurti", price=1000, stock=5, variants="S, M")
@@ -97,9 +113,9 @@ class CheckoutFlowTests(TestCase):
 
     def test_full_checkout_with_otp(self):
         self._fill_cart()
-        r = self.client.post(reverse("storefront:checkout", args=[self.store.slug]), self._details())
+        r, code = self._post_checkout(self._details())
         self.assertRedirects(r, reverse("storefront:verify", args=[self.store.slug]))
-        code = self.client.session["checkout_otp"]["code"]
+        self.assertNotIn(code, str(self.client.session["checkout_otp"]))
         verify = reverse("storefront:verify", args=[self.store.slug])
         r = self.client.post(verify, {"code": "000000" if code != "000000" else "111111"})
         self.assertContains(r, "doesn")
@@ -121,8 +137,7 @@ class CheckoutFlowTests(TestCase):
         self.store.advance_threshold = 10
         self.store.save()
         self._fill_cart()
-        self.client.post(reverse("storefront:checkout", args=[self.store.slug]), self._details())
-        code = self.client.session["checkout_otp"]["code"]
+        _, code = self._post_checkout(self._details())
         verify = reverse("storefront:verify", args=[self.store.slug])
         r = self.client.post(verify, {"code": code})
         self.assertEqual(r.status_code, 200)

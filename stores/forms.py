@@ -5,7 +5,7 @@ from core.content import SELLER_CATEGORIES
 from .models import COURIERS, PAYMENT_METHODS, Category, Coupon, Order, Product, Store
 from .services.risk import is_valid_bd_mobile, normalize_phone
 
-MAX_IMAGE_MB = 5
+MAX_IMAGE_MB = 4  # Vercel rejects request bodies over 4.5 MB
 
 
 def validate_image_size(image):
