@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Pricing — {{ BRAND.name }}{% endblock %}
+{% block content %}
+<section class="page-hero center">
+  <div class="container">
+    <span class="eyebrow on-dark">Pricing</span>
+    <h1>Simple BDT pricing. <span class="grad-text">Unlimited orders.</span></h1>
+    <p class="lead">Start free, upgrade when you grow. Every paid plan includes unlimited orders, all Bangladeshi payments and a 99.9% uptime SLA.</p>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    {% include "partials/pricing_cards.html" %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Compare plans</span>
+      <h2>What's included.</h2>
+    </div>
+    <div class="table-wrap reveal">
+      <table class="table">
+        <thead><tr><th>Feature</th>{% for p in plans %}<th class="center">{{ p.name }}</th>{% endfor %}</tr></thead>
+        <tbody>
+          <tr><td>Price / month</td>{% for p in plans %}<td class="center"><strong>৳{{ p.price_monthly }}</strong></td>{% endfor %}</tr>
+          <tr><td>Products</td>{% for p in plans %}<td class="center">{{ p.product_limit|default:"Unlimited" }}</td>{% endfor %}</tr>
+          <tr><td>Orders</td>{% for p in plans %}<td class="center">Unlimited</td>{% endfor %}</tr>
+          <tr><td>AI listings / month</td>{% for p in plans %}<td class="center">{{ p.ai_listings_per_month|default:"Unlimited" }}</td>{% endfor %}</tr>
+          <tr><td>Staff accounts</td>{% for p in plans %}<td class="center">{{ p.staff_limit|default:"Unlimited" }}</td>{% endfor %}</tr>
+          <tr><td>Custom domain + SSL</td>{% for p in plans %}<td class="center">{% if p.custom_domain %}<span class="mark yes"><svg class="i"><use href="#i-check"/></svg></span>{% else %}<span class="mark no"><svg class="i"><use href="#i-minus"/></svg></span>{% endif %}</td>{% endfor %}</tr>
+          <tr><td>bKash, Nagad, SSLCommerz</td>{% for p in plans %}<td class="center">{% if p.is_free %}<span class="mark no"><svg class="i"><use href="#i-minus"/></svg></span>{% else %}<span class="mark yes"><svg class="i"><use href="#i-check"/></svg></span>{% endif %}</td>{% endfor %}</tr>
+          <tr><td>OTP checkout &amp; COD fraud shield</td>{% for p in plans %}<td class="center"><span class="mark yes"><svg class="i"><use href="#i-check"/></svg></span></td>{% endfor %}</tr>
+          <tr><td>Finance, P&amp;L &amp; VAT</td>{% for p in plans %}<td class="center">{% if p.price_monthly >= 1799 %}<span class="mark yes"><svg class="i"><use href="#i-check"/></svg></span>{% else %}<span class="mark no"><svg class="i"><use href="#i-minus"/></svg></span>{% endif %}</td>{% endfor %}</tr>
+          <tr><td>Messenger &amp; WhatsApp AI order bot</td>{% for p in plans %}<td class="center">{% if p.price_monthly >= 1799 %}<span class="mark yes"><svg class="i"><use href="#i-check"/></svg></span>{% else %}<span class="mark no"><svg class="i"><use href="#i-minus"/></svg></span>{% endif %}</td>{% endfor %}</tr>
+          <tr><td>API &amp; account manager</td>{% for p in plans %}<td class="center">{% if p.price_monthly >= 3999 %}<span class="mark yes"><svg class="i"><use href="#i-check"/></svg></span>{% else %}<span class="mark no"><svg class="i"><use href="#i-minus"/></svg></span>{% endif %}</td>{% endfor %}</tr>
+          <tr><td>7-day Bangla support</td>{% for p in plans %}<td class="center"><span class="mark yes"><svg class="i"><use href="#i-check"/></svg></span></td>{% endfor %}</tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container faq-layout">
+    <div class="section-head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2>Billing questions.</h2>
+      <p>Need a custom plan for a large catalog or multiple brands? <a href="{% url 'core:contact' %}" class="link">Talk to us</a></p>
+    </div>
+    <div class="reveal">{% include "partials/faq_list.html" %}</div>
+  </div>
+</section>
+
+{% include "partials/cta_band.html" %}
+<div style="height:clamp(48px,7vw,80px)"></div>
+{% endblock %}

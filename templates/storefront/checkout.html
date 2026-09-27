@@ -1,0 +1,28 @@
+{% extends "storefront/base.html" %}
+{% block page_title %}Checkout{% endblock %}
+{% block shop %}
+<div class="container">
+  <div class="checkout-steps"><span class="on"><span class="n">1</span>Details</span><span class="sep"></span><span><span class="n">2</span>Verify phone</span><span class="sep"></span><span><span class="n">3</span>Done</span></div>
+  <div class="cart-layout" data-checkout data-fee-in="{{ store.delivery_fee_dhaka }}" data-fee-out="{{ store.delivery_fee_outside }}" data-base="{{ quote.base|floatformat:0 }}">
+    <form method="post" class="panel" novalidate id="checkout-form">
+      {% csrf_token %}
+      <div class="panel-head"><h2>Delivery details</h2><span class="muted" style="font-size:.85rem"><svg class="i i-sm" style="display:inline;vertical-align:-3px"><use href="#i-lock"/></svg> Secure</span></div>
+      <div class="panel-body" style="display:grid;gap:16px">
+        <div class="form-grid">
+          {% include "partials/field.html" with field=form.name %}
+          {% include "partials/field.html" with field=form.phone %}
+          {% include "partials/field.html" with field=form.address full=1 %}
+          {% include "partials/field.html" with field=form.city %}
+          {% include "partials/field.html" with field=form.email %}
+        </div>
+        <div class="area-options">{% include "partials/field.html" with field=form.inside_dhaka %}</div>
+        <div class="pay-options">{% include "partials/field.html" with field=form.payment_method %}</div>
+        {% include "partials/field.html" with field=form.note %}
+        <button class="btn btn-brand btn-lg btn-block" type="submit">{% if store.otp_checkout %}Continue to verify phone{% else %}Place order{% endif %} <svg class="i"><use href="#i-arrow-right"/></svg></button>
+        {% if store.otp_checkout %}<p class="muted" style="font-size:.84rem;text-align:center">We'll text a 6-digit code to confirm your number. This keeps fake orders away and your delivery on time.</p>{% endif %}
+      </div>
+    </form>
+    <aside class="summary">{% include "storefront/_summary.html" %}</aside>
+  </div>
+</div>
+{% endblock %}

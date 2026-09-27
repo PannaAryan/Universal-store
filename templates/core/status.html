@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}System status — {{ BRAND.name }}{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow on-dark">Status</span>
+    <h1>99.9% uptime, <span class="grad-text">in public.</span></h1>
+    <p class="lead">If your store is unavailable for more than 43 minutes in a month, you get service credits automatically. <a href="{% url 'core:legal' 'refund' %}" style="color:#fff;text-decoration:underline">Read the SLA</a>.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="container container-sm" style="max-width:920px">
+    <div class="status-hero reveal"><span class="dot pulse-dot" style="color:#fff"></span> All systems operational</div>
+    <div class="card status-list reveal" style="padding:0">
+      {% for name in components %}
+      <div class="status-row">
+        <strong>{{ name }}</strong>
+        <span class="badge badge-green"><span class="dot"></span> Operational</span>
+        <div class="uptime" aria-label="Last 60 days uptime">{% for d in "x"|rjust:60|make_list %}<i></i>{% endfor %}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="source">Last 60 days. Each bar is one day. Connect your monitoring provider to feed live incident data into this page.</p>
+  </div>
+</section>
+{% endblock %}

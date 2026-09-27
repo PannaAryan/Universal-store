@@ -1,0 +1,49 @@
+{% extends "dashboard/base.html" %}
+{% load shop %}
+{% block page_title %}Analytics{% endblock %}
+{% block dash %}
+<div class="page-head"><div><h1>Analytics</h1><p>The last 30 days at {{ request.store.name }}.</p></div></div>
+<div class="kpis">
+  {% for s in stats %}<div class="kpi"><strong>{{ s.value }}</strong><span>{{ s.label }}</span></div>{% endfor %}
+</div>
+<section class="panel" style="margin-bottom:20px">
+  <div class="panel-head"><h2>Daily revenue</h2><span class="muted" style="font-size:.85rem">Excludes cancelled and returned orders</span></div>
+  <div class="panel-body">
+    <div class="chart dense" style="height:240px" role="img" aria-label="Daily revenue for the last 30 days">
+      {% for s in series %}<div class="col"><span class="tip">{{ s.day|date:"j M" }} · {{ s.revenue|taka }}</span><i style="height:{{ s.pct }}%"></i><small>{{ s.day|date:"j M" }}</small></div>{% endfor %}
+    </div>
+  </div>
+</section>
+<div class="grid grid-3" style="margin-bottom:20px">
+  <section class="panel"><div class="panel-head"><h3>Order status</h3></div><div class="panel-body bar-list">
+    {% for r in by_status %}<div class="row"><span>{{ r.label }}</span><b>{{ r.n }}</b><div class="mock-bar"><i style="width:{{ r.pct }}%"></i></div></div>{% empty %}<p class="muted">No orders yet.</p>{% endfor %}
+  </div></section>
+  <section class="panel"><div class="panel-head"><h3>Where orders come from</h3></div><div class="panel-body bar-list">
+    {% for r in by_source %}<div class="row"><span>{{ r.label }}</span><b>{{ r.pct }}%</b><div class="mock-bar"><i style="width:{{ r.pct }}%;background:linear-gradient(90deg,var(--saffron),var(--saffron-300))"></i></div></div>{% empty %}<p class="muted">No orders yet.</p>{% endfor %}
+  </div></section>
+  <section class="panel"><div class="panel-head"><h3>Payment methods</h3></div><div class="panel-body bar-list">
+    {% for r in by_payment %}<div class="row"><span>{{ r.label }}</span><b>{{ r.pct }}%</b><div class="mock-bar"><i style="width:{{ r.pct }}%;background:linear-gradient(90deg,var(--sky),#6fb1d1)"></i></div></div>{% empty %}<p class="muted">No orders yet.</p>{% endfor %}
+  </div></section>
+</div>
+<div class="dash-grid">
+  <section class="panel">
+    <div class="panel-head"><h2>Top products</h2></div>
+    {% if top_products %}
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>Product</th><th class="num">Units</th><th class="num">Revenue</th></tr></thead>
+      <tbody>{% for t in top_products %}<tr><td><strong>{{ forloop.counter }}.</strong> {{ t.title }}</td><td class="num">{{ t.qty }}</td><td class="num"><strong>{{ t.revenue|taka }}</strong></td></tr>{% endfor %}</tbody>
+    </table></div>
+    {% else %}<div class="empty"><p>Sales will show up here.</p></div>{% endif %}
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h2>Finance &amp; VAT</h2>{% if request.store.plan.price_monthly < 1799 %}<span class="badge badge-orange">Business plan</span>{% endif %}</div>
+    <div class="panel-body">
+      <div class="kv">
+        <div><span>Estimated VAT (5% on revenue)</span><strong>{{ vat_estimate|taka }}</strong></div>
+      </div>
+      <p class="muted" style="font-size:.86rem;margin-top:1rem">Add cost prices to your products for accurate profit. Full P&amp;L and VAT exports are included on Business and Scale.</p>
+      {% if request.store.plan.price_monthly < 1799 %}<a href="{% url 'dashboard:billing' %}" class="btn btn-dark btn-sm" style="margin-top:1rem">Upgrade for full reports</a>{% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}

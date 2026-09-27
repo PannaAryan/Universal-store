@@ -1,0 +1,18 @@
+{% extends "storefront/base.html" %}
+{% load shop %}
+{% block page_title %}Order confirmed{% endblock %}
+{% block shop %}
+<div class="container" style="max-width:720px">
+  <div class="success-hero">
+    <span class="icon-tile"><svg class="i"><use href="#i-check"/></svg></span>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.4rem)">Thank you, {{ order.shipping_name|default:"friend" }}!</h1>
+    <p class="muted" style="margin-top:.5rem">Your order <strong style="color:var(--ink)">#{{ order.number }}</strong> is placed. {{ store.name }} will confirm it shortly.</p>
+    <p class="bn muted" lang="bn" style="margin-top:.3rem">আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে।</p>
+  </div>
+  {% include "storefront/_order_panel.html" %}
+  <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin:24px 0 64px">
+    <a href="{% url 'storefront:home' store.slug %}" class="btn btn-brand btn-lg">Continue shopping</a>
+    <a href="{% url 'storefront:track' store.slug %}?number={{ order.number }}&phone={{ order.shipping_phone }}" class="btn btn-ghost btn-lg">Track this order</a>
+  </div>
+</div>
+{% endblock %}

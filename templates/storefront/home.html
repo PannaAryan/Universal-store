@@ -1,0 +1,47 @@
+{% extends "storefront/base.html" %}
+{% load shop %}
+{% block shop %}
+<section class="shop-hero">
+  <div class="container shop-hero-inner">
+    <div>
+      <h1>{{ store.name }}</h1>
+      <p>{{ store.tagline|default:"Quality products, delivered to your door." }}</p>
+    </div>
+    <div class="shop-perks">
+      <span><svg class="i"><use href="#i-truck"/></svg> Nationwide delivery</span>
+      <span><svg class="i"><use href="#i-wallet"/></svg> COD · bKash · Nagad</span>
+      <span><svg class="i"><use href="#i-shield"/></svg> Verified checkout</span>
+    </div>
+  </div>
+</section>
+<div class="container">
+  <div class="shop-filters">
+    <nav class="cat-pills" aria-label="Categories">
+      <a href="{% query c='' page='' %}" class="{% if not cat %}active{% endif %}">All</a>
+      {% for c in categories %}<a href="{% query c=c.slug page='' %}" class="{% if cat == c.slug %}active{% endif %}">{{ c.name }}</a>{% endfor %}
+    </nav>
+    <form class="sort" method="get">
+      {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}{% if cat %}<input type="hidden" name="c" value="{{ cat }}">{% endif %}
+      <label class="sr-only" for="sort">Sort</label>
+      <select id="sort" name="sort" data-autosubmit>
+        <option value="new" {% if sort == 'new' %}selected{% endif %}>Newest</option>
+        <option value="low" {% if sort == 'low' %}selected{% endif %}>Price: low to high</option>
+        <option value="high" {% if sort == 'high' %}selected{% endif %}>Price: high to low</option>
+      </select>
+    </form>
+  </div>
+  {% if q %}<p class="muted" style="margin-bottom:1rem">{{ page.paginator.count }} result{{ page.paginator.count|pluralize }} for “{{ q }}” · <a href="{% url 'storefront:home' store.slug %}" class="link">Clear</a></p>{% endif %}
+  {% if page.object_list %}
+  <div class="products">{% for p in page %}{% include "storefront/_card.html" %}{% endfor %}</div>
+  {% if page.paginator.num_pages > 1 %}
+  <div class="pagination">
+    {% if page.has_previous %}<a class="btn btn-ghost btn-sm" href="{% query page=page.previous_page_number %}">Previous</a>{% endif %}
+    <span class="btn btn-light btn-sm" style="pointer-events:none">Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+    {% if page.has_next %}<a class="btn btn-ghost btn-sm" href="{% query page=page.next_page_number %}">Next</a>{% endif %}
+  </div>
+  {% endif %}
+  {% else %}
+  <div class="empty"><span class="icon-tile"><svg class="i i-lg"><use href="#i-search"/></svg></span><h3>No products found</h3><p>{% if q or cat %}Try another search or category.{% else %}New arrivals are coming soon.{% endif %}</p>{% if q or cat %}<a href="{% url 'storefront:home' store.slug %}" class="btn btn-brand">See all products</a>{% endif %}</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "storefront/base.html" %}
+{% load shop %}
+{% block page_title %}Your bag{% endblock %}
+{% block shop %}
+<div class="container">
+  {% if lines %}
+  <div class="cart-layout">
+    <section class="panel">
+      <div class="panel-head"><h2>Your bag · {{ cart_count }} item{{ cart_count|pluralize }}</h2><a href="{% url 'storefront:home' store.slug %}" class="link" style="color:var(--brand);font-size:.9rem">Continue shopping</a></div>
+      <form method="post" id="cart-form">
+        {% csrf_token %}<input type="hidden" name="action" value="update">
+        {% for line in lines %}
+        <div class="cart-line">
+          <a href="{{ line.product.get_absolute_url }}" class="p-media">{% if line.product.image %}<img src="{{ line.product.image.url }}" alt="">{% else %}<div class="p-placeholder {{ line.product|thumb_class }}">{{ line.product.initials }}</div>{% endif %}</a>
+          <div>
+            <h3>{{ line.product.title }}</h3>
+            <div class="meta">{% if line.variant %}{{ line.variant }} · {% endif %}{{ line.product.price|taka }} each</div>
+            <div class="controls">
+              <div class="qty sm" data-qty><button type="button" data-step="-1" aria-label="Decrease"><svg class="i i-sm"><use href="#i-minus"/></svg></button><input type="number" name="qty_{{ line.key }}" value="{{ line.quantity }}" min="0" max="{{ line.product.stock }}" data-autosubmit aria-label="Quantity"><button type="button" data-step="1" aria-label="Increase"><svg class="i i-sm"><use href="#i-plus"/></svg></button></div>
+              <button class="remove" type="submit" form="remove-{{ forloop.counter }}"><svg class="i i-sm"><use href="#i-trash"/></svg> Remove</button>
+            </div>
+          </div>
+          <div class="line-total">{{ line.line_total|taka }}</div>
+        </div>
+        {% endfor %}
+        <noscript><div style="padding:16px 22px"><button class="btn btn-ghost btn-sm">Update bag</button></div></noscript>
+      </form>
+      {% for line in lines %}<form method="post" id="remove-{{ forloop.counter }}">{% csrf_token %}<input type="hidden" name="action" value="remove"><input type="hidden" name="key" value="{{ line.key }}"></form>{% endfor %}
+    </section>
+    <aside class="summary">
+      <section class="panel">
+        <div class="panel-head"><h2>Order summary</h2></div>
+        <div class="panel-body">
+          <form method="post" class="coupon-form">{% csrf_token %}<input type="hidden" name="action" value="coupon"><input type="text" name="code" placeholder="Coupon code" value="{{ coupon.code|default:'' }}" aria-label="Coupon code"><button class="btn btn-dark btn-sm" style="height:44px">Apply</button></form>
+          <div class="kv" style="margin-top:1.2rem">
+            <div><span>Subtotal</span><span>{{ subtotal|taka }}</span></div>
+            {% if coupon %}<div><span>Discount · {{ coupon.code }}</span><span style="color:var(--emerald)">−{{ discount|taka }}</span></div>{% endif %}
+            <div><span>Delivery</span><span>From ৳{{ store.delivery_fee_dhaka }}</span></div>
+            <div class="total"><span>Total</span><span>{{ total_before_delivery|taka }} + delivery</span></div>
+          </div>
+          <a href="{% url 'storefront:checkout' store.slug %}" class="btn btn-brand btn-lg btn-block" style="margin-top:1.4rem">Checkout <svg class="i"><use href="#i-arrow-right"/></svg></a>
+          <p class="muted" style="font-size:.82rem;text-align:center;margin-top:.8rem"><svg class="i i-sm" style="display:inline;vertical-align:-3px"><use href="#i-lock"/></svg> Cash on delivery, bKash and Nagad accepted</p>
+        </div>
+      </section>
+    </aside>
+  </div>
+  {% else %}
+  <div class="empty"><span class="icon-tile"><svg class="i i-lg"><use href="#i-bag"/></svg></span><h2 style="font-size:1.5rem">Your bag is empty</h2><p>Browse the collection and add something you love.</p><a href="{% url 'storefront:home' store.slug %}" class="btn btn-brand btn-lg">Start shopping</a></div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "storefront/base.html" %}
+{% load shop %}
+{% block page_title %}{{ product.seo_title|default:product.title }}{% endblock %}
+{% block meta_description %}{{ product.seo_description|default:product.description_en|truncatechars:160 }}{% endblock %}
+{% block shop %}
+<div class="container">
+  <a href="{% url 'storefront:home' store.slug %}" class="crumb" style="display:inline-flex;align-items:center;gap:.3rem;color:var(--muted);font-size:.88rem;margin-top:20px"><svg class="i i-sm"><use href="#i-arrow-left"/></svg> {{ product.category|default:"All products" }}</a>
+  <div class="pd">
+    <div class="pd-media">
+      {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.title }}">{% else %}<div class="p-placeholder {{ product|thumb_class }}">{{ product.initials }}</div>{% endif %}
+    </div>
+    <div class="pd-info">
+      <h1>{{ product.title }}</h1>
+      {% if product.title_bn %}<div class="bn" lang="bn">{{ product.title_bn }}</div>{% endif %}
+      <div class="pd-price">
+        <strong>{{ product.price|taka }}</strong>
+        {% if product.compare_at_price %}<s>{{ product.compare_at_price|taka }}</s><span class="badge badge-orange">Save {{ product.discount_pct }}%</span>{% endif %}
+      </div>
+      {% if product.stock == 0 %}<span class="pd-stock out"><svg class="i i-sm"><use href="#i-x-circle"/></svg> Sold out</span>
+      {% elif product.is_low_stock %}<span class="pd-stock low"><svg class="i i-sm"><use href="#i-alert"/></svg> Only {{ product.stock }} left — order soon</span>
+      {% else %}<span class="pd-stock"><svg class="i i-sm"><use href="#i-check-circle"/></svg> In stock, ready to ship</span>{% endif %}
+
+      <form method="post" action="{% url 'storefront:cart_add' store.slug %}">
+        {% csrf_token %}
+        <input type="hidden" name="product" value="{{ product.pk }}">
+        {% if product.variant_list %}
+        <div class="pd-block">
+          <span class="label">Choose option</span>
+          <div class="variant-pills">
+            {% for v in product.variant_list %}<label><input type="radio" name="variant" value="{{ v }}" {% if forloop.first %}checked{% endif %}><span>{{ v }}</span></label>{% endfor %}
+          </div>
+        </div>
+        {% endif %}
+        {% if product.stock > 0 %}
+        <div class="pd-block">
+          <span class="label">Quantity</span>
+          <div class="qty" data-qty><button type="button" data-step="-1" aria-label="Decrease"><svg class="i i-sm"><use href="#i-minus"/></svg></button><input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" aria-label="Quantity"><button type="button" data-step="1" aria-label="Increase"><svg class="i i-sm"><use href="#i-plus"/></svg></button></div>
+        </div>
+        <div class="pd-buy">
+          <button class="btn btn-ghost btn-lg" type="submit"><svg class="i"><use href="#i-bag"/></svg> Add to bag</button>
+          <button class="btn btn-brand btn-lg" type="submit" name="buy_now" value="1">Buy now</button>
+        </div>
+        {% endif %}
+      </form>
+
+      <div class="pd-trust">
+        <div><svg class="i"><use href="#i-wallet"/></svg>Cash on delivery</div>
+        <div><svg class="i"><use href="#i-truck"/></svg>৳{{ store.delivery_fee_dhaka }} in Dhaka</div>
+        <div><svg class="i"><use href="#i-shield"/></svg>Verified checkout</div>
+      </div>
+
+      <div class="pd-tabs">
+        {% if product.highlight_list %}
+        <details open><summary>Highlights <svg class="i"><use href="#i-chevron-down"/></svg></summary>
+          <div class="body" style="white-space:normal"><ul class="check-list" style="margin:0">{% for h in product.highlight_list %}<li><svg class="i" style="color:var(--brand)"><use href="#i-check"/></svg>{{ h }}</li>{% endfor %}</ul></div>
+        </details>
+        {% endif %}
+        {% if product.description_en %}<details {% if not product.highlight_list %}open{% endif %}><summary>Description <svg class="i"><use href="#i-chevron-down"/></svg></summary><div class="body">{{ product.description_en }}</div></details>{% endif %}
+        {% if product.description_bn %}<details><summary><span lang="bn">বিবরণ (বাংলা)</span> <svg class="i"><use href="#i-chevron-down"/></svg></summary><div class="body" lang="bn">{{ product.description_bn }}</div></details>{% endif %}
+        <details><summary>Delivery &amp; returns <svg class="i"><use href="#i-chevron-down"/></svg></summary><div class="body">Inside Dhaka: ৳{{ store.delivery_fee_dhaka }} · 1–2 days
+Outside Dhaka: ৳{{ store.delivery_fee_outside }} · 2–4 days
+Check your parcel in front of the delivery person. Contact us within 3 days for exchanges.</div></details>
+      </div>
+      {% if product.tag_list %}<div class="chips" style="margin-top:1.2rem">{% for t in product.tag_list %}<a href="{% url 'storefront:home' store.slug %}?q={{ t|urlencode }}" class="chip">#{{ t }}</a>{% endfor %}</div>{% endif %}
+    </div>
+  </div>
+  {% if related %}
+  <h2 style="font-size:1.5rem;margin-bottom:1.2rem">You may also like</h2>
+  <div class="products">{% for p in related %}{% include "storefront/_card.html" %}{% endfor %}</div>
+  {% endif %}
+</div>
+{% endblock %}

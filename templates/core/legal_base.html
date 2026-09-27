@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} — {{ BRAND.name }}{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow on-dark">Legal</span>
+    <h1>{{ title }}</h1>
+    <p class="lead">Last updated {% now "j F Y" %}. Plain language, no surprises.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="container"><div class="prose">{% block prose %}{% endblock %}</div></div>
+</section>
+{% endblock %}

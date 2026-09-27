@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static humanize %}
+{% block title %}Set up your store — {{ BRAND.name }}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">{% endblock %}
+{% block nav %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="onboard">
+  <div class="onboard-main">
+    <a href="{% url 'core:home' %}" class="logo">{% include "partials/logo.html" %}</a>
+    <form class="onboard-card" method="post" data-wizard novalidate>
+      {% csrf_token %}
+      <div class="wizard-steps" aria-hidden="true"><span data-step-dot></span><span data-step-dot></span><span data-step-dot></span></div>
+
+      <section data-step>
+        <span class="eyebrow">Step 1 of 3</span>
+        <h1 style="margin-top:.6rem">Name your store</h1>
+        <p class="sub">You can change all of this later.</p>
+        <div style="display:grid;gap:16px">
+          {% include "partials/field.html" with field=form.name %}
+          <div class="field{% if form.slug.errors %} has-error{% endif %}">
+            <label for="{{ form.slug.id_for_label }}">Store address</label>
+            <div class="input-affix">{{ form.slug }}<span>.dokan.ai</span></div>
+            <span class="help">Your free link: <strong data-slug-preview>yourshop</strong>.dokan.ai</span>
+            {% for e in form.slug.errors %}<p class="error">{{ e }}</p>{% endfor %}
+          </div>
+          {% include "partials/field.html" with field=form.category %}
+        </div>
+      </section>
+
+      <section data-step hidden>
+        <span class="eyebrow">Step 2 of 3</span>
+        <h1 style="margin-top:.6rem">Make it yours</h1>
+        <p class="sub">Pick a brand colour and a look.</p>
+        <div style="display:grid;gap:16px">
+          {% include "partials/field.html" with field=form.tagline %}
+          {% include "partials/field.html" with field=form.phone %}
+          <div class="field">
+            <label>Brand colour</label>
+            <div class="swatches">
+              {{ form.brand_color }}
+              <button type="button" class="swatch" style="background:#1E7F5C" data-theme-color="#1E7F5C" aria-label="Emerald"></button>
+              <button type="button" class="swatch" style="background:#0F3A2D" data-theme-color="#0F3A2D" aria-label="Forest"></button>
+              <button type="button" class="swatch" style="background:#F07A2A" data-theme-color="#F07A2A" aria-label="Saffron"></button>
+              <button type="button" class="swatch" style="background:#C3422F" data-theme-color="#C3422F" aria-label="Brick"></button>
+              <button type="button" class="swatch" style="background:#2F7FA8" data-theme-color="#2F7FA8" aria-label="River"></button>
+              <button type="button" class="swatch" style="background:#B7791F" data-theme-color="#B7791F" aria-label="Mustard"></button>
+              <button type="button" class="swatch" style="background:#0F1D19" data-theme-color="#0F1D19" aria-label="Ink"></button>
+            </div>
+          </div>
+          {% include "partials/field.html" with field=form.theme %}
+        </div>
+      </section>
+
+      <section data-step hidden>
+        <span class="eyebrow">Step 3 of 3</span>
+        <h1 style="margin-top:.6rem">Choose a plan</h1>
+        <p class="sub">Every plan starts with 30 days free. No card needed.</p>
+        <div class="plan-pick">
+          {% for p in plans %}
+          <label>
+            <input type="radio" name="plan" value="{{ p.slug }}" {% if p.slug == chosen %}checked{% endif %}>
+            <span><b>{{ p.name }}{% if p.is_featured %} <span class="badge badge-orange" style="height:20px">Popular</span>{% endif %}</b><small>{{ p.tagline }}</small></span>
+            <span class="price">৳{{ p.price_monthly|intcomma }}<small class="muted" style="font-weight:400">/mo</small></span>
+          </label>
+          {% endfor %}
+        </div>
+      </section>
+
+      <div style="display:flex;gap:.6rem;margin-top:1.8rem">
+        <button type="button" class="btn btn-ghost" data-prev><svg class="i i-sm"><use href="#i-arrow-left"/></svg> Back</button>
+        <button type="button" class="btn btn-dark" data-next style="margin-left:auto">Continue <svg class="i i-sm"><use href="#i-arrow-right"/></svg></button>
+        <button type="submit" class="btn btn-primary" data-submit hidden style="margin-left:auto">Launch my store <svg class="i i-sm"><use href="#i-sparkle"/></svg></button>
+      </div>
+    </form>
+  </div>
+  <aside class="onboard-preview" aria-hidden="true">
+    <div class="preview-shop" data-brand-preview style="--brand:#1E7F5C">
+      <header><b>Your store</b><small>Live preview</small></header>
+      <div class="preview-grid"><div></div><div></div><div></div><div></div></div>
+      <div class="preview-cta">Order now · Cash on delivery</div>
+    </div>
+  </aside>
+</div>
+{% endblock %}

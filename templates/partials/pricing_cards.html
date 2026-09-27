@@ -1,0 +1,35 @@
+{% load humanize %}
+<div data-billing>
+  <div style="display:flex;justify-content:center;margin-bottom:2.5rem">
+    <div class="billing-toggle" role="group" aria-label="Billing period">
+      <button type="button" class="active" data-billing-set="monthly">Monthly</button>
+      <button type="button" data-billing-set="annual">Annual <span class="badge badge-orange">2 months free</span></button>
+    </div>
+  </div>
+  <div class="pricing">
+    {% for plan in plans %}
+    <article class="plan reveal{% if plan.is_featured %} featured{% endif %} reveal-d{{ forloop.counter0|add:0 }}">
+      {% if plan.is_featured %}<span class="plan-flag">Most popular</span>{% endif %}
+      <h3>{{ plan.name }}</h3>
+      <p class="plan-tagline">{{ plan.tagline }}</p>
+      <div class="plan-price">
+        <strong><span data-price-monthly>৳{{ plan.price_monthly|intcomma }}</span><span data-price-annual>৳{{ plan.price_annual_monthly|intcomma }}</span></strong>
+        <span class="plan-period">/month</span>
+      </div>
+      <p class="plan-annual">
+        {% if plan.is_free %}Free forever{% else %}<span data-price-monthly>Billed monthly</span><span data-price-annual>৳{{ plan.price_annual|intcomma }} billed yearly</span>{% endif %}
+      </p>
+      <a href="{% url 'accounts:signup' %}?plan={{ plan.slug }}" class="btn {% if plan.is_featured %}btn-primary{% elif plan.is_free %}btn-ghost{% else %}btn-dark{% endif %} btn-block">
+        {% if plan.is_free %}Start for free{% else %}Start 30-day trial{% endif %}
+      </a>
+      <ul class="plan-features">
+        {% for f in plan.feature_list %}<li><svg class="i"><use href="#i-check"/></svg>{{ f }}</li>{% endfor %}
+      </ul>
+    </article>
+    {% endfor %}
+  </div>
+  <div class="pricing-foot">
+    <span><strong>Free period:</strong> 30 days, extended to 60 and 90 days as you reach 10 and 50 orders.</span>
+    <span class="chips"><span class="muted" style="align-self:center;font-size:.85rem">Add-ons:</span>{% for a in addons %}<span class="chip">{{ a }}</span>{% endfor %}</span>
+  </div>
+</div>

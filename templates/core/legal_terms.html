@@ -1,0 +1,24 @@
+{% extends "core/legal_base.html" %}
+{% block prose %}
+<p>These terms govern your use of {{ BRAND.name }} ("we", "us") to create and run an online store. By creating an account you agree to them.</p>
+<h2>1. Your account</h2>
+<p>You must give accurate information and keep your password safe. You are responsible for activity on your account and your staff accounts.</p>
+<h2>2. Your store and content</h2>
+<p>You own your products, photos, customer data and brand. You grant us a limited licence to host and display that content so your store works. You must not sell illegal, counterfeit or prohibited goods.</p>
+<h2>3. AI-generated listings</h2>
+<p>AI Snap &amp; Sell drafts listings to save you time. Review every listing before publishing — you are responsible for the accuracy of product claims, prices and descriptions.</p>
+<h2>4. Plans, trials and billing</h2>
+<ul>
+  <li>New stores get a 30-day free trial, extended to 60 days at 10 orders and 90 days at 50 orders.</li>
+  <li>Paid plans are billed monthly or annually in BDT. Annual plans include two months free.</li>
+  <li>Every paid plan includes unlimited orders. Add-ons such as SMS packs and extra AI credits are billed by usage.</li>
+</ul>
+<h2>5. Payments and deliveries</h2>
+<p>Payment gateways (bKash, Nagad, SSLCommerz) and couriers (Pathao, Steadfast, RedX) are provided by third parties under their own terms. We pass order data to them only to complete your orders.</p>
+<h2>6. Availability</h2>
+<p>We target 99.9% monthly uptime. Remedies for downtime are described in our <a class="link" href="{% url 'core:legal' 'refund' %}">Refund &amp; SLA policy</a>.</p>
+<h2>7. Ending your account</h2>
+<p>You may cancel at any time and export your products, customers and orders. We may suspend stores that break these terms or the law, with notice where possible.</p>
+<h2>8. Governing law</h2>
+<p>These terms are governed by the laws of Bangladesh. Questions: <a class="link" href="mailto:{{ BRAND.email }}">{{ BRAND.email }}</a>.</p>
+{% endblock %}

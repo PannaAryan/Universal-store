@@ -1,0 +1,19 @@
+{% extends "core/legal_base.html" %}
+{% block prose %}
+<h2>Uptime SLA</h2>
+<p>We commit to 99.9% monthly uptime for storefronts and checkout, measured on our public status page.</p>
+<ul>
+  <li>Below 99.9% (more than ~43 minutes of downtime): 10% credit on next month's bill.</li>
+  <li>Below 99.5%: 25% credit.</li>
+  <li>Below 99.0%: 50% credit.</li>
+</ul>
+<p>Credits are applied automatically. Scheduled maintenance announced 48 hours ahead and nationwide internet shutdowns are excluded.</p>
+<h2>Refunds</h2>
+<ul>
+  <li>Monthly plans can be cancelled any time; you keep access until the end of the paid period.</li>
+  <li>Annual plans can be refunded pro-rata within the first 30 days.</li>
+  <li>Unused add-on credits (SMS, AI) are non-refundable but never expire while your account is active.</li>
+</ul>
+<h2>How to claim</h2>
+<p>Contact <a class="link" href="mailto:{{ BRAND.email }}">{{ BRAND.email }}</a> or call {{ BRAND.phone }}. We respond within one business day.</p>
+{% endblock %}

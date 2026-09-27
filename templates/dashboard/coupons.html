@@ -1,0 +1,49 @@
+{% extends "dashboard/base.html" %}
+{% load shop %}
+{% block page_title %}Coupons{% endblock %}
+{% block dash %}
+<div class="page-head"><div><h1>Coupons</h1><p>Discount codes for Eid, Pohela Boishakh, 11.11 and loyal buyers.</p></div></div>
+<div class="dash-grid">
+  <section class="panel">
+    <div class="panel-head"><h2>Your coupons</h2></div>
+    {% if coupons %}
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Code</th><th>Discount</th><th>Min. order</th><th>Used</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          {% for c in coupons %}
+          <tr>
+            <td><span class="coupon-code">{{ c.code }}</span></td>
+            <td><strong>{{ c.label }}</strong></td>
+            <td>{% if c.min_order %}{{ c.min_order|taka }}{% else %}—{% endif %}</td>
+            <td>{{ c.times_used }}{% if c.usage_limit %} / {{ c.usage_limit }}{% endif %}</td>
+            <td>{% if c.is_active %}<span class="badge badge-green">Active</span>{% else %}<span class="badge">Paused</span>{% endif %}{% if c.expires_at %}<br><small class="muted">Until {{ c.expires_at|date:"j M Y" }}</small>{% endif %}</td>
+            <td class="num"><form method="post" action="{% url 'dashboard:coupon_toggle' c.pk %}">{% csrf_token %}<button class="btn btn-ghost btn-sm">{% if c.is_active %}Pause{% else %}Activate{% endif %}</button></form></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty"><span class="icon-tile orange"><svg class="i i-lg"><use href="#i-tag"/></svg></span><h3>No coupons yet</h3><p>Create your first code on the right — buyers enter it in their bag.</p></div>
+    {% endif %}
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h2>New coupon</h2></div>
+    <form method="post" class="panel-body" style="display:grid;gap:16px" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="alert danger"><svg class="i"><use href="#i-alert"/></svg>{{ form.non_field_errors }}</div>{% endif %}
+      {% include "partials/field.html" with field=form.code %}
+      <div class="form-grid">
+        {% include "partials/field.html" with field=form.percent_off %}
+        {% include "partials/field.html" with field=form.amount_off %}
+        {% include "partials/field.html" with field=form.min_order %}
+        {% include "partials/field.html" with field=form.usage_limit %}
+      </div>
+      {% include "partials/field.html" with field=form.expires_at %}
+      {% include "partials/field.html" with field=form.is_active %}
+      <button class="btn btn-green btn-block">Create coupon</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "dashboard/base.html" %}
+{% load shop %}
+{% block page_title %}Orders{% endblock %}
+{% block dash %}
+<div class="page-head">
+  <div><h1>Orders</h1><p>Every order from your store, Messenger, WhatsApp and phone — in one place.</p></div>
+  <div class="actions"><a href="{% url 'dashboard:order_add' %}" class="btn btn-primary"><svg class="i i-sm"><use href="#i-plus"/></svg> Manual order</a></div>
+</div>
+<div class="tabs">
+  {% for key, label, n in tabs %}<a href="{% query status=key page='' %}" class="{% if status == key %}active{% endif %}">{{ label }} <span>{{ n }}</span></a>{% endfor %}
+  <a href="{% query status='risky' page='' %}" class="{% if status == 'risky' %}active{% endif %}" style="color:{% if status != 'risky' %}var(--danger){% endif %}"><svg class="i i-sm"><use href="#i-shield"/></svg> High risk</a>
+</div>
+<div class="toolbar">
+  <form method="get"><input type="hidden" name="status" value="{{ status }}"><input class="input" type="search" name="q" value="{{ q }}" placeholder="Order number, name or phone" style="flex:1;padding:0 1rem;border:1px solid var(--line-strong);background:var(--surface)"><button class="btn btn-dark btn-sm" style="height:42px">Search</button></form>
+</div>
+<section class="panel">
+  {% if page.object_list %}
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Order</th><th>Customer</th><th>Payment</th><th>Status</th><th>Risk</th><th class="num">Total</th></tr></thead>
+      <tbody>
+        {% for order in page %}
+        <tr>
+          <td><a href="{% url 'dashboard:order_detail' order.number %}" class="link">#{{ order.number }}</a><br><small class="muted">{{ order.created_at|date:"j M, g:i a" }}</small></td>
+          <td><b style="font-weight:600">{{ order.shipping_name }}</b>{% if order.otp_verified %} <svg class="i i-sm" style="display:inline;color:var(--emerald);vertical-align:-3px" aria-label="OTP verified"><use href="#i-check-circle"/></svg>{% endif %}<br><small class="muted">{{ order.shipping_phone }} · {{ order.get_source_display }}</small></td>
+          <td>{{ order.get_payment_method_display }}<br><small class="muted">{{ order.get_payment_status_display }}</small></td>
+          <td>{% include "dashboard/_status.html" %}{% if order.courier %}<br><small class="muted">{{ order.get_courier_display }}</small>{% endif %}</td>
+          <td>{% include "dashboard/_risk.html" %}</td>
+          <td class="num"><strong>{{ order.total|taka }}</strong></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "dashboard/_pagination.html" %}
+  {% else %}
+  <div class="empty"><span class="icon-tile"><svg class="i i-lg"><use href="#i-bag"/></svg></span><h3>No orders here</h3><p>{% if q or status %}Try a different filter or search.{% else %}When buyers order from your store they'll appear here instantly.{% endif %}</p><a href="{% url 'dashboard:order_add' %}" class="btn btn-dark">Add a manual order</a></div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% block title %}Features — {{ BRAND.name }}{% endblock %}
+{% block content %}
+<section class="page-hero center">
+  <div class="container">
+    <span class="eyebrow on-dark">Features</span>
+    <h1>Everything to run your shop, <span class="grad-text">in one dashboard.</span></h1>
+    <p class="lead">Store, catalog, inventory, orders, couriers, payments, customers, marketing and analytics — built for how Bangladesh buys and sells.</p>
+    <div class="hero-ctas"><a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg">Start free</a><a href="{% url 'storefront:home' 'nakshi-threads' %}" class="btn btn-ghost-light btn-lg">See a demo store</a></div>
+  </div>
+</section>
+
+<section class="section-tight section-white">
+  <div class="container">
+    <div class="grid grid-4">
+      {% for m in c.MODULES %}
+      <a href="#m{{ forloop.counter }}" class="card card-hover reveal" style="display:flex;gap:1rem;align-items:center;padding:18px 20px">
+        <span class="icon-tile" style="margin:0;width:40px;height:40px"><svg class="i"><use href="#i-{{ m.icon }}"/></svg></span>
+        <strong style="font-family:var(--font-display);font-weight:600">{{ m.title }}</strong>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <div class="feature-row" id="m1">
+      <div class="reveal">
+        <span class="eyebrow">Store &amp; domain</span>
+        <h2>Your own brand, not a rented Facebook page.</h2>
+        <p>Pick a theme, add your logo and colours, and go live on a free subdomain in minutes. Connect your own <strong>.com</strong> or <strong>.com.bd</strong> on Growth and above.</p>
+        <ul class="check-list">
+          <li><svg class="i"><use href="#i-check"/></svg>Hosting and SSL included, auto-scaling for campaigns</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Mobile-first themes that load fast on 3G</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Bangla and English storefront</li>
+        </ul>
+      </div>
+      <div class="feature-media reveal reveal-d1">
+        <div class="mock">
+          <div class="mock-row"><span style="display:flex;gap:.6rem;align-items:center"><svg class="i"><use href="#i-globe"/></svg><b>nakshithreads.com.bd</b></span><span class="badge badge-green"><span class="dot"></span> Connected</span></div>
+          <div class="mock-row"><span class="muted">SSL certificate</span><span class="badge badge-green">Active</span></div>
+          <div class="mock-row"><span class="muted">Theme</span><b>Boutique</b></div>
+          <div class="mock-row"><span class="muted">Brand colour</span><span style="display:flex;gap:6px"><i style="width:22px;height:22px;border-radius:6px;background:#1e7f5c"></i><i style="width:22px;height:22px;border-radius:6px;background:#f07a2a"></i><i style="width:22px;height:22px;border-radius:6px;background:#e8b04b"></i></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row flip" id="m2">
+      <div class="reveal">
+        <span class="eyebrow">Catalog &amp; AI</span>
+        <h2>Photo in, full listing out.</h2>
+        <p>AI Snap &amp; Sell writes titles, Bangla and English descriptions, highlights, variants, tags and SEO from a single photo. Bulk upload and variants handle the rest.</p>
+        <ul class="check-list">
+          <li><svg class="i"><use href="#i-check"/></svg>Sizes, colours and custom variants</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Compare-at prices and automatic discount badges</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Google-ready SEO titles and descriptions</li>
+        </ul>
+        <a href="{% url 'core:snap' %}" class="link" style="margin-top:1.5rem">Try AI Snap &amp; Sell <svg class="i i-sm"><use href="#i-arrow-right"/></svg></a>
+      </div>
+      <div class="feature-media warm reveal reveal-d1">
+        <div class="mock">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem"><span class="hv-ai"><svg class="i"><use href="#i-sparkle"/></svg> AI listing · 11s</span><span class="badge">Draft</span></div>
+          <b style="font-family:var(--font-display);font-size:1.05rem">Jamdani Silk Dupatta</b>
+          <div class="bn muted" lang="bn">জামদানি সিল্ক ওড়না</div>
+          <div class="hv-lines"><span></span><span></span><span></span></div>
+          <div class="hv-tags"><span>jamdani</span><span>dupatta</span><span>silk</span><span>eid gift</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row" id="m3">
+      <div class="reveal">
+        <span class="eyebrow">Inventory</span>
+        <h2>Never sell what you don't have.</h2>
+        <p>Stock updates the moment an order is placed, returns go back on the shelf automatically, and low-stock alerts land before you run out.</p>
+        <ul class="check-list">
+          <li><svg class="i"><use href="#i-check"/></svg>Real-time stock across store, Messenger and WhatsApp orders</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Low-stock thresholds per product</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Multi-warehouse on Scale</li>
+        </ul>
+      </div>
+      <div class="feature-media reveal reveal-d1">
+        <div class="mock">
+          <div class="mock-row"><b>Handloom saree · M</b><span class="badge badge-green">42 in stock</span></div>
+          <div class="mock-row"><b>Nakshi kantha cushion</b><span class="badge badge-yellow">4 left</span></div>
+          <div class="mock-row"><b>Clay tea set</b><span class="badge badge-red">Out of stock</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row flip" id="m4">
+      <div class="reveal">
+        <span class="eyebrow">Orders &amp; couriers</span>
+        <h2>From "inbox" to "delivered" in one flow.</h2>
+        <p>Every order — from your store, Messenger, WhatsApp or a phone call — lands in one list. Confirm, pack and book Pathao, Steadfast or RedX with a tracking code your buyer can follow.</p>
+        <ul class="check-list">
+          <li><svg class="i"><use href="#i-check"/></svg>Pending → Confirmed → Packed → Shipped → Delivered</li>
+          <li><svg class="i"><use href="#i-check"/></svg>COD fraud shield: OTP, risk score and partial advance</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Returns restock automatically</li>
+        </ul>
+      </div>
+      <div class="feature-media dark reveal reveal-d1">
+        <div class="mock">
+          <div class="mock-row"><b>#2609482913</b><span class="badge badge-blue">Shipped · Pathao</span></div>
+          <div class="mock-row"><span class="muted">Risk score</span><span class="badge badge-green">12 · Low</span></div>
+          <div class="mock-row"><span class="muted">Payment</span><b>bKash · Paid</b></div>
+        </div>
+        <div class="mock">
+          <div class="mock-row"><b>#2609118274</b><span class="badge badge-red">Risk 72 · Advance asked</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row" id="m5">
+      <div class="reveal">
+        <span class="eyebrow">Payments &amp; finance</span>
+        <h2>bKash, Nagad, cards and COD — built in.</h2>
+        <p>No plugins, no USD billing. Accept every way Bangladesh pays, then see profit, delivery costs and VAT in plain numbers.</p>
+        <ul class="check-list">
+          <li><svg class="i"><use href="#i-check"/></svg>bKash, Nagad, SSLCommerz and cash on delivery</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Profit &amp; loss with cost prices</li>
+          <li><svg class="i"><use href="#i-check"/></svg>VAT estimate and exportable reports on Business</li>
+        </ul>
+      </div>
+      <div class="feature-media warm reveal reveal-d1">
+        <div class="mock">
+          <div class="mock-row"><span class="muted">Revenue · 30 days</span><b>৳3,84,200</b></div>
+          <div class="mock-row"><span class="muted">Gross profit</span><b style="color:var(--emerald)">৳1,52,900</b></div>
+          <div class="mock-row"><span class="muted">bKash</span><div class="mock-bar" style="width:50%"><i style="width:48%"></i></div></div>
+          <div class="mock-row"><span class="muted">COD</span><div class="mock-bar" style="width:50%"><i style="width:36%"></i></div></div>
+          <div class="mock-row"><span class="muted">Nagad</span><div class="mock-bar" style="width:50%"><i style="width:16%"></i></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row flip" id="m6">
+      <div class="reveal">
+        <span class="eyebrow">Customers</span>
+        <h2>Know every buyer by name.</h2>
+        <p>Phone-verified customer profiles with full order history, automatic segments and loyalty points — data you own, not Facebook.</p>
+        <ul class="check-list">
+          <li><svg class="i"><use href="#i-check"/></svg>OTP login and verified phone numbers</li>
+          <li><svg class="i"><use href="#i-check"/></svg>New, Repeat and VIP segments</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Coupons and loyalty points</li>
+        </ul>
+      </div>
+      <div class="feature-media reveal reveal-d1">
+        <div class="mock">
+          <div class="mock-row"><b>Farhana Rahman</b><span class="badge badge-orange">VIP · 9 orders</span></div>
+          <div class="mock-row"><b>Tanvir Hasan</b><span class="badge badge-green">Repeat · 3 orders</span></div>
+          <div class="mock-row"><b>Nusrat Jahan</b><span class="badge">New</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row" id="m7">
+      <div class="reveal">
+        <span class="eyebrow">Marketing</span>
+        <h2>Bring buyers back without boosting every post.</h2>
+        <p>SMS and email campaigns, abandoned-cart recovery, Meta Pixel and Conversions API, and an AI sales assistant that replies in Bangla at 2am.</p>
+        <ul class="check-list">
+          <li><svg class="i"><use href="#i-check"/></svg>Abandoned-cart SMS</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Meta Pixel &amp; CAPI for better ad targeting</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Facebook &amp; Instagram catalog sync</li>
+        </ul>
+      </div>
+      <div class="feature-media reveal reveal-d1">
+        <div class="mock">
+          <div class="mock-bubble in" lang="bn">আপু, এই শাড়িটা কি M সাইজে আছে?</div>
+          <div class="mock-bubble out" lang="bn">জি আছে! দাম ৳১,৪৫০, ঢাকায় ডেলিভারি ৳৬০। অর্ডার করতে নাম আর ঠিকানা দিন 😊</div>
+          <div class="mock-bubble in">Mirpur 10, Dhaka</div>
+          <div class="mock-bubble out">Order #2609482913 confirmed ✅</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row flip" id="m8">
+      <div class="reveal">
+        <span class="eyebrow">Team &amp; analytics</span>
+        <h2>Numbers that tell you what to do next.</h2>
+        <p>Sales, conversion, delivery success and top products at a glance. Invite staff with roles and see who did what.</p>
+        <ul class="check-list">
+          <li><svg class="i"><use href="#i-check"/></svg>Daily revenue and order trends</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Delivery success and return rates</li>
+          <li><svg class="i"><use href="#i-check"/></svg>Staff roles and activity logs</li>
+        </ul>
+      </div>
+      <div class="feature-media warm reveal reveal-d1">
+        <div class="mock">
+          <div style="display:flex;align-items:end;gap:6px;height:140px">
+            {% for h in "4568795689ab"|make_list %}<i style="flex:1;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,var(--emerald-400),var(--emerald));height:{% widthratio forloop.counter 12 100 %}%"></i>{% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Integrations</span>
+      <h2>Works with the services you already use.</h2>
+    </div>
+    <div class="chips reveal" style="justify-content:center;gap:.75rem">
+      {% for name in c.INTEGRATIONS %}<span class="chip" style="height:44px;padding:0 1.2rem;background:#fff;border:1px solid var(--line);font-weight:600">{{ name }}</span>{% endfor %}
+    </div>
+  </div>
+</section>
+
+{% include "partials/cta_band.html" %}
+<div style="height:clamp(48px,7vw,80px)"></div>
+{% endblock %}

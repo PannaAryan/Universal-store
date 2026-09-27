@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% block page_title %}{{ store.tagline|default:"Shop online" }}{% endblock %} — {{ store.name }}{% endblock %}
+{% block description %}{% block meta_description %}{{ store.name }}: {{ store.tagline|default:"shop online with cash on delivery, bKash and Nagad." }}{% endblock %}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/storefront.css' %}"><meta name="theme-color" content="{{ store.brand_color }}">{% endblock %}
+{% block nav %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="shop" style="--brand:{{ store.brand_color }}">
+  <div class="shop-announce"><span>🚚 Delivery across Bangladesh · ৳{{ store.delivery_fee_dhaka }} inside Dhaka · Cash on delivery available</span></div>
+  <header class="shop-nav">
+    <div class="container">
+      <div class="shop-nav-inner">
+        <a href="{% url 'storefront:home' store.slug %}" class="shop-brand">
+          <span class="store-avatar">{% if store.logo %}<img src="{{ store.logo.url }}" alt="">{% else %}{{ store.name|slice:":1"|upper }}{% endif %}</span>
+          <span>{{ store.name }}</span>
+        </a>
+        <form class="shop-search" action="{% url 'storefront:home' store.slug %}" role="search">
+          <svg class="i"><use href="#i-search"/></svg>
+          <input type="search" name="q" value="{{ q|default:'' }}" placeholder="Search products" aria-label="Search products">
+        </form>
+        <div class="shop-actions">
+          <a href="{% url 'storefront:track' store.slug %}" class="icon-btn" aria-label="Track order" title="Track order"><svg class="i"><use href="#i-truck"/></svg></a>
+          <a href="{% url 'storefront:cart' store.slug %}" class="icon-btn" aria-label="Shopping bag, {{ cart_count }} items"><svg class="i"><use href="#i-bag"/></svg>{% if cart_count %}<span class="count">{{ cart_count }}</span>{% endif %}</a>
+        </div>
+      </div>
+      <div class="shop-search-mobile">
+        <form class="shop-search" action="{% url 'storefront:home' store.slug %}" role="search">
+          <svg class="i"><use href="#i-search"/></svg>
+          <input type="search" name="q" value="{{ q|default:'' }}" placeholder="Search products" aria-label="Search products">
+        </form>
+      </div>
+    </div>
+  </header>
+  <main>{% block shop %}{% endblock %}</main>
+  <footer class="shop-footer">
+    <div class="container shop-footer-inner">
+      <div>
+        <strong style="color:var(--ink)">{{ store.name }}</strong>
+        <div style="margin-top:.3rem;display:flex;gap:1rem;flex-wrap:wrap">
+          {% if store.phone %}<a href="tel:{{ store.phone }}">{{ store.phone }}</a>{% endif %}
+          {% if store.email %}<a href="mailto:{{ store.email }}">{{ store.email }}</a>{% endif %}
+          {% if store.facebook_url %}<a href="{{ store.facebook_url }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
+          <a href="{% url 'storefront:track' store.slug %}">Track order</a>
+        </div>
+        {% if store.address %}<div style="margin-top:.3rem">{{ store.address }}</div>{% endif %}
+      </div>
+      <a href="{% url 'core:home' %}" class="powered"><span class="logo-mark"><svg viewBox="0 0 24 24"><path d="M4 10l1.5-5h13L20 10"/><path d="M4 10a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M6 12.5V19h12v-6.5"/></svg></span> Powered by {{ BRAND.name }}</a>
+    </div>
+  </footer>
+</div>
+{% endblock %}

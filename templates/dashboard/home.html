@@ -1,0 +1,106 @@
+{% extends "dashboard/base.html" %}
+{% load shop %}
+{% block page_title %}Overview{% endblock %}
+{% block dash %}
+<div class="page-head">
+  <div>
+    <h1>Good {% now "H" as hour %}{% if hour < "12" %}morning{% elif hour < "17" %}afternoon{% else %}evening{% endif %}, {{ user.first_name|default:"there" }}</h1>
+    <p>Here's what's happening at {{ request.store.name }} today.</p>
+  </div>
+  <div class="actions">
+    <a href="{% url 'dashboard:order_add' %}" class="btn btn-ghost"><svg class="i i-sm"><use href="#i-plus"/></svg> Manual order</a>
+    <a href="{% url 'dashboard:product_add' %}" class="btn btn-primary"><svg class="i i-sm"><use href="#i-camera"/></svg> Snap &amp; Sell</a>
+  </div>
+</div>
+
+{% if risky %}
+<div class="alert danger" style="margin-bottom:20px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+  <span style="display:flex;gap:.75rem;align-items:center"><svg class="i"><use href="#i-shield"/></svg><span><strong>{{ risky }} pending order{{ risky|pluralize }}</strong> flagged as high risk by the fraud shield.</span></span>
+  <a href="{% url 'dashboard:orders' %}?status=risky" class="btn btn-danger btn-sm">Review now</a>
+</div>
+{% endif %}
+
+<div class="kpis">
+  {% for k in kpis %}
+  <div class="kpi"><span class="icon-tile{% if forloop.counter == 4 %} orange{% endif %}"><svg class="i"><use href="#i-{{ k.icon }}"/></svg></span><strong>{{ k.value }}</strong><span>{{ k.label }}</span></div>
+  {% endfor %}
+</div>
+
+<div class="dash-grid">
+  <div class="stack">
+    <section class="panel">
+      <div class="panel-head"><h2>Sales · last 14 days</h2><a href="{% url 'dashboard:analytics' %}" class="link" style="font-size:.88rem">Analytics <svg class="i i-sm"><use href="#i-arrow-right"/></svg></a></div>
+      <div class="panel-body">
+        <div class="chart" role="img" aria-label="Daily revenue for the last 14 days">
+          {% for s in series %}
+          <div class="col"><span class="tip">{{ s.day|date:"j M" }} · {{ s.revenue|taka }} · {{ s.orders }} order{{ s.orders|pluralize }}</span><i style="height:{{ s.pct }}%"></i><small>{{ s.day|date:"j/n" }}</small></div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Recent orders</h2><a href="{% url 'dashboard:orders' %}" class="link" style="font-size:.88rem">All orders <svg class="i i-sm"><use href="#i-arrow-right"/></svg></a></div>
+      {% if recent_orders %}
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Order</th><th>Customer</th><th>Status</th><th>Risk</th><th class="num">Total</th></tr></thead>
+          <tbody>
+            {% for order in recent_orders %}
+            <tr>
+              <td><a href="{% url 'dashboard:order_detail' order.number %}" class="link">#{{ order.number }}</a><br><small class="muted">{{ order.created_at|timesince }} ago</small></td>
+              <td>{{ order.shipping_name }}<br><small class="muted">{{ order.get_source_display }}</small></td>
+              <td>{% include "dashboard/_status.html" %}</td>
+              <td>{% include "dashboard/_risk.html" %}</td>
+              <td class="num"><strong>{{ order.total|taka }}</strong></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty"><span class="icon-tile orange"><svg class="i i-lg"><use href="#i-bag"/></svg></span><h3>No orders yet</h3><p>Share your store link on Facebook, or log a Messenger order manually.</p><a href="{% url 'dashboard:order_add' %}" class="btn btn-dark">Add a manual order</a></div>
+      {% endif %}
+    </section>
+  </div>
+
+  <div class="stack">
+    <section class="panel">
+      <div class="panel-head"><h2>Launch checklist</h2><span class="badge badge-green">{{ checklist_done }}/{{ checklist|length }}</span></div>
+      <div class="panel-body">
+        <div class="progress" style="margin-bottom:1rem"><i style="width:{% widthratio checklist_done checklist|length 100 %}%"></i></div>
+        <ul class="checklist">
+          {% for c in checklist %}
+          <li class="{% if c.done %}done{% endif %}">
+            {% if c.url %}<a href="{% url c.url %}">{% else %}<span data-copy="{{ request.scheme }}://{{ request.get_host }}{{ request.store.get_absolute_url }}" style="cursor:pointer">{% endif %}
+              <span class="tick">{% if c.done %}<svg class="i i-sm"><use href="#i-check"/></svg>{% endif %}</span>
+              <span class="label">{{ c.label }}</span>
+            {% if c.url %}</a>{% else %}</span>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Low stock</h2><a href="{% url 'dashboard:products' %}?filter=low" class="link" style="font-size:.88rem">View all</a></div>
+      <div class="panel-body" style="padding-top:8px;padding-bottom:8px">
+        {% for p in low_stock %}
+        <a href="{% url 'dashboard:product_edit' p.pk %}" class="mock-row row-link">
+          <span class="cell-product" style="min-width:0"><span class="thumb {{ p|thumb_class }}" style="width:38px;height:38px">{% if p.image %}<img src="{{ p.image.url }}" alt="">{% else %}{{ p.initials }}{% endif %}</span><b>{{ p.title|truncatechars:28 }}</b></span>
+          <span class="badge {% if p.stock == 0 %}badge-red{% else %}badge-yellow{% endif %}">{% if p.stock == 0 %}Out{% else %}{{ p.stock }} left{% endif %}</span>
+        </a>
+        {% empty %}
+        <p class="muted" style="padding:1rem 0;text-align:center">All products are well stocked. 🎉</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="ai-panel">
+      <h3><svg class="i"><use href="#i-sparkle"/></svg> AI Snap &amp; Sell</h3>
+      <p>Photo in, full Bangla &amp; English listing out. {{ request.store.ai_listings_this_month }} used this month{% if request.store.ai_quota %} of {{ request.store.ai_quota }}{% endif %}.</p>
+      <a href="{% url 'dashboard:product_add' %}" class="btn btn-primary btn-block" style="margin-top:1rem"><svg class="i i-sm"><use href="#i-camera"/></svg> Add a product</a>
+    </section>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "accounts/base_auth.html" %}
+{% block title %}Create your store — {{ BRAND.name }}{% endblock %}
+{% block auth %}
+<h1>Create your free store</h1>
+<p class="sub">Live in about 10 minutes. No card needed.</p>
+<form method="post" novalidate>
+  {% csrf_token %}
+  {% include "partials/field.html" with field=form.full_name %}
+  {% include "partials/field.html" with field=form.email %}
+  {% include "partials/field.html" with field=form.phone %}
+  {% include "partials/field.html" with field=form.password %}
+  <div class="field{% if form.agree.errors %} has-error{% endif %}">
+    <label class="check">{{ form.agree }} <span>I agree to the <a href="{% url 'core:legal' 'terms' %}" class="link" target="_blank">Terms</a> and <a href="{% url 'core:legal' 'privacy' %}" class="link" target="_blank">Privacy policy</a></span></label>
+    {% for e in form.agree.errors %}<p class="error">Please accept the terms to continue.</p>{% endfor %}
+  </div>
+  <button class="btn btn-primary btn-lg btn-block" type="submit">Create my store <svg class="i"><use href="#i-arrow-right"/></svg></button>
+</form>
+<p class="auth-foot">Already selling with us? <a href="{% url 'accounts:login' %}" class="link">Sign in</a></p>
+{% endblock %}

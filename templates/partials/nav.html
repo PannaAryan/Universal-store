@@ -1,0 +1,41 @@
+{% with u=request.resolver_match.url_name %}
+<header class="nav is-dark" data-nav>
+  <div class="container nav-inner">
+    <a href="{% url 'core:home' %}" class="logo" aria-label="{{ BRAND.name }} home">{% include "partials/logo.html" %}</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="{% url 'core:features' %}" class="{% if u == 'features' %}active{% endif %}">Features</a>
+      <a href="{% url 'core:snap' %}" class="{% if u == 'snap' %}active{% endif %}">AI Snap &amp; Sell</a>
+      <a href="{% url 'core:pricing' %}" class="{% if u == 'pricing' %}active{% endif %}">Pricing</a>
+      <a href="{% url 'core:compare' %}" class="{% if u == 'compare' %}active{% endif %}">Compare</a>
+      <a href="{% url 'core:about' %}" class="{% if u == 'about' %}active{% endif %}">About</a>
+      <a href="{% url 'core:help' %}" class="{% if u == 'help' %}active{% endif %}">Help</a>
+    </nav>
+    <div class="nav-actions">
+      {% if user.is_authenticated %}
+        <a href="{% url 'dashboard:home' %}" class="btn btn-primary btn-sm">Dashboard <svg class="i i-sm"><use href="#i-arrow-right"/></svg></a>
+      {% else %}
+        <a href="{% url 'accounts:login' %}" class="btn btn-ghost btn-sm hide-sm">Sign in</a>
+        <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-sm hide-sm">Start free</a>
+      {% endif %}
+    </div>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle>
+      <svg class="i"><use href="#i-menu"/></svg>
+    </button>
+  </div>
+</header>
+<div class="mobile-menu" data-mobile-menu>
+  <a href="{% url 'core:features' %}">Features <svg class="i"><use href="#i-chevron-right"/></svg></a>
+  <a href="{% url 'core:snap' %}">AI Snap &amp; Sell <svg class="i"><use href="#i-chevron-right"/></svg></a>
+  <a href="{% url 'core:pricing' %}">Pricing <svg class="i"><use href="#i-chevron-right"/></svg></a>
+  <a href="{% url 'core:compare' %}">Compare <svg class="i"><use href="#i-chevron-right"/></svg></a>
+  <a href="{% url 'core:about' %}">About <svg class="i"><use href="#i-chevron-right"/></svg></a>
+  <a href="{% url 'core:investors' %}">Investors <svg class="i"><use href="#i-chevron-right"/></svg></a>
+  <a href="{% url 'core:help' %}">Help &amp; support <svg class="i"><use href="#i-chevron-right"/></svg></a>
+  {% if user.is_authenticated %}
+    <a href="{% url 'dashboard:home' %}" class="btn btn-primary btn-lg btn-block">Go to dashboard</a>
+  {% else %}
+    <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg btn-block">Start free — no card needed</a>
+    <a href="{% url 'accounts:login' %}" class="btn btn-ghost btn-lg btn-block">Sign in</a>
+  {% endif %}
+</div>
+{% endwith %}

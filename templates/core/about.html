@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}About — {{ BRAND.name }}{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow on-dark">About us</span>
+    <h1>Helping 2 lakh+ Bangladeshi sellers <span class="grad-text">own their online business.</span></h1>
+    <p class="lead">We're building the AI shop manager for F-commerce: a store that sets itself up from a photo, takes orders while you sleep, and keeps fake COD orders out.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container problem">
+    <div class="reveal">
+      <span class="eyebrow">Our mission</span>
+      <h2 style="font-size:clamp(2rem,4vw,2.8rem);margin-top:.9rem">Every seller deserves a store they own.</h2>
+      <p class="muted" style="margin-top:1rem;font-size:1.08rem">65% of digital commerce in Bangladesh comes from F-commerce sellers — yet there are only about 2,000 dedicated e-commerce sites against 3 lakh+ Facebook selling pages. When Facebook was restricted in 2024, many of them lost sales overnight.</p>
+      <p class="muted" style="margin-top:1rem;font-size:1.08rem">We want every one of those sellers to have their own brand, their own customers and their own data — without needing a developer, a designer or a copywriter.</p>
+    </div>
+    <div class="grid grid-2">
+      {% for s in c.MARKET_STATS %}
+      <div class="stat-card reveal reveal-d{{ forloop.counter }}{% if forloop.first %} dark{% endif %}"><strong>{{ s.value }}</strong><p>{{ s.label }}</p></div>
+      {% endfor %}
+      <div class="stat-card reveal reveal-d3"><strong>3–5%</strong><p>of total retail is online today — the headroom is large</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="gtm">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">How we reach sellers</span>
+      <h2>We meet sellers where they already are.</h2>
+      <p>Launch: 100 pilot sellers in fashion, cosmetics and home décor, then a founding-seller offer for the first 1,000.</p>
+    </div>
+    <div class="grid grid-3">
+      {% for g in c.GTM %}
+      <div class="card card-hover reveal reveal-d{{ forloop.counter0|divisibleby:2|yesno:'1,2' }}">
+        <span class="icon-tile{% if forloop.counter|divisibleby:2 %} orange{% endif %}"><svg class="i"><use href="#i-{{ g.icon }}"/></svg></span>
+        <h3>{{ g.title }}</h3><p>{{ g.text }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="alert reveal" style="margin-top:24px;justify-content:space-between;align-items:center;flex-wrap:wrap">
+      <span style="display:flex;gap:.75rem;align-items:center"><svg class="i"><use href="#i-heart"/></svg><span>Couriers, payment providers, seller groups and women-led networks — <strong>let's grow together.</strong></span></span>
+      <a href="{% url 'core:contact' %}?type=partner" class="btn btn-green btn-sm">Become a partner</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="roadmap">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Roadmap</span>
+      <h2>From MVP to scale in 24 months.</h2>
+      <p>Each phase has a clear gate before we move on.</p>
+    </div>
+    <div class="timeline">
+      {% for r in c.ROADMAP %}
+      <div class="phase reveal reveal-d{{ forloop.counter0 }}">
+        <span class="phase-dot"></span>
+        <div class="card">
+          <h3>{{ r.phase }} <small>{{ r.when }}</small></h3>
+          <p style="margin-top:.6rem">{{ r.text }}</p>
+          <div class="gate"><svg class="i"><use href="#i-flag"/></svg><span><strong>Gate:</strong> {{ r.gate }}</span></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="team">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Team</span>
+      <h2>The people building it.</h2>
+    </div>
+    <div class="grid grid-4">
+      {% for m in c.TEAM %}
+      <div class="card team-card reveal reveal-d{{ forloop.counter0 }}">
+        <div class="avatar"><svg class="i" style="width:34px;height:34px"><use href="#i-users"/></svg></div>
+        <h3>{{ m.name }}</h3>
+        <p style="color:var(--emerald);font-weight:600;font-size:.9rem">{{ m.role }}</p>
+        <p style="margin-top:.5rem">{{ m.bio }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="card reveal" style="display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap;padding:clamp(24px,4vw,40px)">
+      <div>
+        <span class="eyebrow">Investors</span>
+        <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);margin-top:.6rem">Market, economics and our seed round.</h2>
+      </div>
+      <a href="{% url 'core:investors' %}" class="btn btn-dark btn-lg">View investor overview <svg class="i"><use href="#i-arrow-right"/></svg></a>
+    </div>
+  </div>
+</section>
+<div style="height:clamp(24px,4vw,48px)"></div>
+{% endblock %}

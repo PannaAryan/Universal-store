@@ -1,0 +1,32 @@
+{% extends "storefront/base.html" %}
+{% load shop %}
+{% block page_title %}Verify your phone{% endblock %}
+{% block shop %}
+<div class="container" style="max-width:560px">
+  <div class="checkout-steps"><span class="on"><span class="n">✓</span>Details</span><span class="sep"></span><span class="on"><span class="n">2</span>Verify phone</span><span class="sep"></span><span><span class="n">3</span>Done</span></div>
+  <section class="panel" style="margin:20px 0 64px">
+    <div class="panel-body" style="padding:clamp(22px,4vw,36px)">
+      <span class="icon-tile" style="background:color-mix(in srgb,var(--brand) 12%,#fff);color:var(--brand)"><svg class="i"><use href="#i-smartphone"/></svg></span>
+      <h1 style="font-size:1.6rem">Enter the code we sent</h1>
+      <p class="muted" style="margin-top:.4rem">A 6-digit code was sent to <strong style="color:var(--ink)">{{ details.phone }}</strong>. <a href="{% url 'storefront:checkout' store.slug %}" style="color:var(--brand);font-weight:600">Change</a></p>
+      {% if otp_hint %}<div class="alert orange" style="margin-top:1rem"><svg class="i"><use href="#i-info"/></svg><span>Demo mode: no SMS gateway is connected, so your code is <strong>{{ otp_hint }}</strong>.</span></div>{% endif %}
+      <form method="post" style="display:grid;gap:16px;margin-top:1.4rem" novalidate>
+        {% csrf_token %}
+        {% include "partials/field.html" with field=form.code %}
+        {% if needs_txn %}
+        <div class="alert {% if prepaid %}{% else %}warn{% endif %}"><svg class="i"><use href="#i-{% if prepaid %}wallet{% else %}shield{% endif %}"/></svg>
+          <span>{% if prepaid %}Send <strong>{{ quote.total|taka }}</strong> to <strong>{{ store.phone|default:"the store's merchant number" }}</strong> via {{ details.payment_method|capfirst }}, then enter the transaction ID.
+          {% else %}To confirm this cash-on-delivery order, please pay the delivery fee of <strong>{{ quote.advance_required|taka }}</strong> in advance via bKash or Nagad to <strong>{{ store.phone|default:"the store's merchant number" }}</strong>. The rest is paid on delivery.{% endif %}</span></div>
+        <div class="field{% if form.transaction_id.errors %} has-error{% endif %}"><label for="id_transaction_id">Transaction ID</label>{{ form.transaction_id }}{% for e in form.transaction_id.errors %}<p class="error">{{ e }}</p>{% endfor %}</div>
+        {% endif %}
+        <div class="kv" style="padding:1rem;border-radius:14px;background:var(--surface-2)">
+          <div><span>Total</span><strong>{{ quote.total|taka }}</strong></div>
+          <div><span>Deliver to</span><span style="text-align:right">{{ details.address }}, {{ details.city }}</span></div>
+        </div>
+        <button class="btn btn-brand btn-lg btn-block" type="submit">Confirm order</button>
+      </form>
+      <form method="post" style="text-align:center;margin-top:1rem">{% csrf_token %}<input type="hidden" name="action" value="resend"><button class="remove" style="margin:auto;color:var(--brand);font-weight:600">Didn't get it? Resend code</button></form>
+    </div>
+  </section>
+</div>
+{% endblock %}

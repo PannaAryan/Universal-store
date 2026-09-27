@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Help center — {{ BRAND.name }}{% endblock %}
+{% block content %}
+<section class="page-hero center">
+  <div class="container">
+    <span class="eyebrow on-dark">Help center</span>
+    <h1>Real support, <span class="grad-text">7 days a week.</span></h1>
+    <p class="lead">Bangla and English help with a first-reply target under 15 minutes, a free onboarding call and free migration.</p>
+  </div>
+</section>
+
+<section class="section-tight section-white">
+  <div class="container">
+    <div class="grid grid-4">
+      <a href="{% url 'core:contact' %}" class="card card-hover reveal"><span class="icon-tile"><svg class="i"><use href="#i-headset"/></svg></span><h3>Talk to support</h3><p>Call, WhatsApp or email our team.</p></a>
+      <a href="{% url 'core:contact' %}?type=demo" class="card card-hover reveal reveal-d1"><span class="icon-tile orange"><svg class="i"><use href="#i-play"/></svg></span><h3>Onboarding call</h3><p>A free 30-minute setup call for every new seller.</p></a>
+      <a href="{% url 'core:contact' %}?type=migration" class="card card-hover reveal reveal-d2"><span class="icon-tile"><svg class="i"><use href="#i-layers"/></svg></span><h3>Free migration</h3><p>We move your products and customers for you.</p></a>
+      <a href="{% url 'core:status' %}" class="card card-hover reveal reveal-d3"><span class="icon-tile"><svg class="i"><use href="#i-pulse"/></svg></span><h3>System status</h3><p>Live uptime for every part of the platform.</p></a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container faq-layout">
+    <div class="section-head reveal">
+      <span class="eyebrow">Getting started</span>
+      <h2>Your store in 10 minutes.</h2>
+      <ol class="check-list" style="list-style:none">
+        <li><span class="step-n" style="width:28px;height:28px;font-size:.8rem;margin:0;box-shadow:none;flex:none">1</span><span><strong>Sign up</strong> with your email and phone.</span></li>
+        <li><span class="step-n" style="width:28px;height:28px;font-size:.8rem;margin:0;box-shadow:none;flex:none">2</span><span><strong>Name your store</strong>, pick a colour and theme.</span></li>
+        <li><span class="step-n" style="width:28px;height:28px;font-size:.8rem;margin:0;box-shadow:none;flex:none">3</span><span><strong>Snap your first product</strong> — AI writes the listing.</span></li>
+        <li><span class="step-n" style="width:28px;height:28px;font-size:.8rem;margin:0;box-shadow:none;flex:none">4</span><span><strong>Set delivery fees</strong> and choose couriers.</span></li>
+        <li><span class="step-n" style="width:28px;height:28px;font-size:.8rem;margin:0;box-shadow:none;flex:none">5</span><span><strong>Share your link</strong> on Facebook and start selling.</span></li>
+      </ol>
+      <a href="{% url 'accounts:signup' %}" class="btn btn-primary" style="margin-top:1.6rem">Start now</a>
+    </div>
+    <div class="reveal">
+      <h3 style="font-size:1.3rem;margin-bottom:1rem">Frequently asked questions</h3>
+      {% include "partials/faq_list.html" %}
+    </div>
+  </div>
+</section>
+{% endblock %}

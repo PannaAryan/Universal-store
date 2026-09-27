@@ -1,0 +1,25 @@
+{% load shop %}
+<section class="panel">
+  <div class="panel-head"><h2>Order #{{ order.number }}</h2><span class="badge status-{{ order.status }}">{{ order.get_status_display }}</span></div>
+  <div class="panel-body" style="display:grid;gap:1.4rem">
+    {% if order.status == 'cancelled' or order.status == 'returned' %}
+      <div class="alert danger"><svg class="i"><use href="#i-x-circle"/></svg><span>This order was {{ order.get_status_display|lower }}.</span></div>
+    {% else %}
+      <div class="stepper">{% for s in order.progress_steps %}<div class="{% if s.current %}current{% elif s.done %}done{% endif %}">{{ s.label }}</div>{% endfor %}</div>
+    {% endif %}
+    {% if order.tracking_code %}<div class="alert"><svg class="i"><use href="#i-truck"/></svg><span>Shipped with <strong>{{ order.get_courier_display }}</strong> · tracking code <strong>{{ order.tracking_code }}</strong></span></div>{% endif %}
+    <div style="display:grid;gap:.7rem">
+      {% for item in order.items.all %}
+      <div style="display:flex;justify-content:space-between;gap:1rem;font-size:.94rem"><span>{{ item.quantity }} × {{ item.title }}{% if item.variant %} <span class="muted">({{ item.variant }})</span>{% endif %}</span><strong>{{ item.line_total|taka }}</strong></div>
+      {% endfor %}
+    </div>
+    <div class="kv">
+      <div><span>Delivery</span><span>{{ order.delivery_fee|taka }}</span></div>
+      {% if order.discount %}<div><span>Discount</span><span style="color:var(--emerald)">−{{ order.discount|taka }}</span></div>{% endif %}
+      <div class="total"><span>Total</span><span>{{ order.total|taka }}</span></div>
+      <div><span>Payment</span><span>{{ order.get_payment_method_display }} · {{ order.get_payment_status_display }}</span></div>
+      <div><span>Pay on delivery</span><strong>{{ order.due_on_delivery|taka }}</strong></div>
+      <div><span>Deliver to</span><span style="text-align:right">{{ order.shipping_address }}, {{ order.shipping_city }}</span></div>
+    </div>
+  </div>
+</section>

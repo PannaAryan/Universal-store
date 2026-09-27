@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Compare store builders — {{ BRAND.name }}{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow on-dark">Competition</span>
+    <h1>Crowded, fragmented — <span class="grad-text">and missing AI.</span></h1>
+    <p class="lead">Zatiq Easy proves sellers will pay for a builder. Our wedge is AI plus reliability guarantees, which no local player combines.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Side by side</span>
+      <h2>How we stack up.</h2>
+    </div>
+    <div class="table-wrap reveal">
+      <table class="table">
+        <thead><tr><th>Platform</th><th>Entry price / month</th><th>Scale (claimed)</th><th>Main gap</th></tr></thead>
+        <tbody>
+          {% for r in c.COMPETITORS %}
+          <tr><td><strong>{{ r.name }}</strong></td><td>{{ r.price }}</td><td>{{ r.scale }}</td><td class="muted">{{ r.gap }}</td></tr>
+          {% endfor %}
+          <tr class="us"><td>{{ BRAND.name }}</td><td>Free; ৳799–3,999</td><td>Launching</td><td>AI listings + AI orders, unlimited orders, uptime SLA</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="source"><strong>Sources:</strong> {{ c.COMPETITOR_SOURCES }}</p>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Feature matrix</span>
+      <h2>The features that matter to Bangladeshi sellers.</h2>
+    </div>
+    <div class="table-wrap reveal">
+      <table class="table">
+        <thead><tr><th>Feature</th>{% for col in c.COMPARE_MATRIX.columns %}<th class="center">{% if forloop.first %}{{ BRAND.name }}{% else %}{{ col }}{% endif %}</th>{% endfor %}</tr></thead>
+        <tbody>
+          {% for label, vals in c.COMPARE_MATRIX.rows %}
+          <tr>
+            <td>{{ label }}</td>
+            {% for v in vals %}
+            <td class="center"{% if forloop.first %} style="background:var(--saffron-soft)"{% endif %}>
+              {% if v == "yes" %}<span class="mark yes" title="Yes"><svg class="i"><use href="#i-check"/></svg></span>
+              {% elif v == "app" %}<span class="badge badge-yellow" title="Via a paid app">App</span>
+              {% elif v == "partial" %}<span class="mark part" title="Limited"><svg class="i"><use href="#i-minus"/></svg></span>
+              {% else %}<span class="mark no" title="No"><svg class="i"><use href="#i-x"/></svg></span>{% endif %}
+            </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="source">Based on publicly listed features at the time of writing. "App" means available through a paid third-party app.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid-3">
+      <div class="card reveal"><span class="icon-tile orange"><svg class="i"><use href="#i-sparkle"/></svg></span><h3>AI no one else has</h3><p>Photo-to-listing and Bangla chat ordering — together, only here.</p></div>
+      <div class="card reveal reveal-d1"><span class="icon-tile"><svg class="i"><use href="#i-pulse"/></svg></span><h3>Reliability you can claim</h3><p>A 99.9% uptime SLA with service credits and a public status page.</p></div>
+      <div class="card reveal reveal-d2"><span class="icon-tile"><svg class="i"><use href="#i-wallet"/></svg></span><h3>Priced for Bangladesh</h3><p>Growth at ৳799 sits below Storola and StoreX — with more value and no order caps.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="container">
+    <div class="alert orange reveal" style="justify-content:space-between;align-items:center;flex-wrap:wrap;padding:1.4rem 1.6rem">
+      <span style="display:flex;gap:.75rem;align-items:center"><svg class="i"><use href="#i-gift"/></svg><span><strong>Switching is free.</strong> Our team moves your products and customers from any builder.</span></span>
+      <a href="{% url 'core:contact' %}?type=migration" class="btn btn-dark btn-sm">Request free migration</a>
+    </div>
+  </div>
+</section>
+{% include "partials/cta_band.html" %}
+<div style="height:clamp(48px,7vw,80px)"></div>
+{% endblock %}

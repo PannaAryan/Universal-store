@@ -1,0 +1,17 @@
+{% extends "accounts/base_auth.html" %}
+{% block title %}Sign in — {{ BRAND.name }}{% endblock %}
+{% block auth %}
+<h1>Welcome back</h1>
+<p class="sub">Sign in to manage your store.</p>
+<form method="post" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="alert danger"><svg class="i"><use href="#i-alert"/></svg><span>Email or password is incorrect.</span></div>{% endif %}
+  {% include "partials/field.html" with field=form.username %}
+  {% include "partials/field.html" with field=form.password %}
+  <div style="display:flex;justify-content:flex-end;margin-top:-6px"><a href="{% url 'accounts:password_reset' %}" class="link" style="font-size:.88rem">Forgot password?</a></div>
+  <input type="hidden" name="next" value="{{ next }}">
+  <button class="btn btn-primary btn-lg btn-block" type="submit">Sign in</button>
+</form>
+<p class="auth-foot">New here? <a href="{% url 'accounts:signup' %}" class="link">Create a free store</a></p>
+<div class="alert" style="margin-top:1.5rem;font-size:.85rem"><svg class="i"><use href="#i-info"/></svg><span>Demo seller: <strong>demo@dokan.ai</strong> / <strong>demo12345</strong> (after running <code>seed_demo</code>)</span></div>
+{% endblock %}

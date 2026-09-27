@@ -1,0 +1,106 @@
+{% extends "dashboard/base.html" %}
+{% load shop %}
+{% block page_title %}Order #{{ order.number }}{% endblock %}
+{% block dash %}
+<a href="{% url 'dashboard:orders' %}" class="crumb"><svg class="i i-sm"><use href="#i-arrow-left"/></svg> Orders</a>
+<div class="page-head">
+  <div><h1>Order #{{ order.number }} {% include "dashboard/_status.html" %}</h1><p>Placed {{ order.created_at|date:"j F Y, g:i a" }} via {{ order.get_source_display }}</p></div>
+</div>
+<div class="dash-grid">
+  <div class="stack">
+    <section class="panel">
+      <div class="panel-head"><h2>Progress</h2>{% if order.tracking_code %}<span class="badge badge-blue">{{ order.get_courier_display }} · {{ order.tracking_code }}</span>{% endif %}</div>
+      <div class="panel-body">
+        {% if order.status == 'cancelled' or order.status == 'returned' %}
+          <div class="alert danger"><svg class="i"><use href="#i-x-circle"/></svg><span>This order was <strong>{{ order.get_status_display|lower }}</strong>. Stock has been returned to inventory.</span></div>
+        {% else %}
+          <div class="stepper">{% for s in order.progress_steps %}<div class="{% if s.current %}current{% elif s.done %}done{% endif %}">{{ s.label }}</div>{% endfor %}</div>
+        {% endif %}
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>Items</h2><span class="muted" style="font-size:.88rem">{{ order.items.count }} item{{ order.items.count|pluralize }}</span></div>
+      <div class="table-wrap">
+        <table class="table">
+          <tbody>
+            {% for item in order.items.all %}
+            <tr>
+              <td><span class="cell-product"><span class="thumb {{ item.product|thumb_class }}">{% if item.product.image %}<img src="{{ item.product.image.url }}" alt="">{% else %}{{ item.title|slice:":2"|upper }}{% endif %}</span><span><b>{{ item.title }}</b>{% if item.variant %}<small>Variant: {{ item.variant }}</small>{% endif %}</span></span></td>
+              <td class="num muted">{{ item.unit_price|taka }} × {{ item.quantity }}</td>
+              <td class="num"><strong>{{ item.line_total|taka }}</strong></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="panel-body" style="border-top:1px solid var(--line)">
+        <div class="kv" style="max-width:340px;margin-left:auto">
+          <div><span>Subtotal</span><span>{{ order.subtotal|taka }}</span></div>
+          <div><span>Delivery ({% if order.inside_dhaka %}inside{% else %}outside{% endif %} Dhaka)</span><span>{{ order.delivery_fee|taka }}</span></div>
+          {% if order.discount %}<div><span>Discount{% if order.coupon %} · {{ order.coupon.code }}{% endif %}</span><span style="color:var(--emerald)">−{{ order.discount|taka }}</span></div>{% endif %}
+          <div class="total"><span>Total</span><span>{{ order.total|taka }}</span></div>
+          {% if order.advance_required %}<div><span>Advance ({{ order.get_payment_status_display|lower }})</span><span>{{ order.advance_required|taka }}</span></div>{% endif %}
+          <div><span><strong>Collect on delivery</strong></span><span><strong>{{ order.due_on_delivery|taka }}</strong></span></div>
+        </div>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>Update order</h2></div>
+      <form method="post" class="panel-body" novalidate>
+        {% csrf_token %}
+        <div class="form-grid">
+          {% include "partials/field.html" with field=form.status %}
+          {% include "partials/field.html" with field=form.payment_status %}
+          {% include "partials/field.html" with field=form.courier %}
+          {% include "partials/field.html" with field=form.tracking_code %}
+          {% include "partials/field.html" with field=form.transaction_id full=1 %}
+          {% include "partials/field.html" with field=form.note full=1 %}
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:1rem"><button class="btn btn-green">Save changes</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="stack">
+    <section class="panel">
+      <div class="panel-head"><h2>Fraud shield</h2>{% include "dashboard/_risk.html" %}</div>
+      <div class="panel-body">
+        <div class="alert {% if order.risk_level == 'high' %}danger{% elif order.risk_level == 'medium' %}warn{% endif %}" style="margin-bottom:1rem">
+          <svg class="i"><use href="#i-shield"/></svg>
+          <span><strong>{{ order.risk_level|capfirst }} risk.</strong> {% if order.risk_level == 'high' %}Call the buyer to confirm, or ask for the delivery fee in advance.{% elif order.risk_level == 'medium' %}Worth a quick confirmation call.{% else %}Safe to confirm and ship.{% endif %}</span>
+        </div>
+        <ul class="check-list" style="margin:0;font-size:.9rem">
+          <li><svg class="i" style="color:{% if order.otp_verified %}var(--emerald){% else %}var(--muted){% endif %}"><use href="#i-{% if order.otp_verified %}check-circle{% else %}minus{% endif %}"/></svg>{% if order.otp_verified %}Phone verified by OTP{% else %}Phone not verified{% endif %}</li>
+          {% for r in risk_reasons %}<li><svg class="i" style="color:var(--muted)"><use href="#i-info"/></svg>{{ r }}</li>{% endfor %}
+        </ul>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>Customer</h2><span class="badge {% if order.customer.segment == 'VIP' %}badge-orange{% elif order.customer.segment == 'Repeat' %}badge-green{% endif %}">{{ order.customer.segment }}</span></div>
+      <div class="panel-body">
+        <div class="kv">
+          <div><span>Name</span><strong>{{ order.shipping_name }}</strong></div>
+          <div><span>Phone</span><a class="link" href="tel:{{ order.shipping_phone }}">{{ order.shipping_phone }}</a></div>
+          <div><span>Address</span><span style="text-align:right">{{ order.shipping_address }}, {{ order.shipping_city }}</span></div>
+          <div><span>Payment</span><span>{{ order.get_payment_method_display }}{% if order.transaction_id %} · {{ order.transaction_id }}{% endif %}</span></div>
+          <div><span>Loyalty points</span><span>{{ order.customer.loyalty_points }}</span></div>
+        </div>
+        {% if order.note %}<div class="alert" style="margin-top:1rem"><svg class="i"><use href="#i-info"/></svg><span>{{ order.note }}</span></div>{% endif %}
+        <div style="display:flex;gap:.5rem;margin-top:1.2rem;flex-wrap:wrap">
+          <a href="tel:{{ order.shipping_phone }}" class="btn btn-ghost btn-sm"><svg class="i i-sm"><use href="#i-phone"/></svg> Call</a>
+          <a href="https://wa.me/88{{ order.shipping_phone }}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm"><svg class="i i-sm"><use href="#i-chat"/></svg> WhatsApp</a>
+        </div>
+      </div>
+    </section>
+    {% if history %}
+    <section class="panel">
+      <div class="panel-head"><h2>Previous orders</h2></div>
+      <div class="panel-body" style="padding-top:6px;padding-bottom:6px">
+        {% for h in history %}
+        <a href="{% url 'dashboard:order_detail' h.number %}" class="mock-row row-link"><span><b>#{{ h.number }}</b><br><small class="muted">{{ h.created_at|date:"j M Y" }}</small></span><span style="text-align:right">{% include "dashboard/_status.html" with order=h %}<br><small>{{ h.total|taka }}</small></span></a>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

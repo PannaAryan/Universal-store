@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block nav %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="auth">
+  <aside class="auth-side">
+    <a href="{% url 'core:home' %}" class="logo">{% include "partials/logo.html" %}</a>
+    <div>
+      <span class="eyebrow on-dark">{% block side_eyebrow %}For Bangladeshi sellers{% endblock %}</span>
+      <h2 style="margin-top:1rem">{% block side_title %}Take a photo. <span class="grad-text">Get a store.</span>{% endblock %}</h2>
+      <ul>
+        <li><svg class="i"><use href="#i-sparkle"/></svg><span>AI writes your product listings in Bangla and English</span></li>
+        <li><svg class="i"><use href="#i-wallet"/></svg><span>bKash, Nagad, cards and COD — built in</span></li>
+        <li><svg class="i"><use href="#i-shield"/></svg><span>OTP checkout and risk scores stop fake COD orders</span></li>
+        <li><svg class="i"><use href="#i-infinity"/></svg><span>Unlimited orders on every paid plan</span></li>
+      </ul>
+    </div>
+    <p style="font-size:.85rem;color:rgba(244,239,231,.55)">Free for 30 days · no card needed · cancel anytime</p>
+  </aside>
+  <div class="auth-main">
+    <div class="auth-card">
+      <a href="{% url 'core:home' %}" class="logo auth-mobile-logo">{% include "partials/logo.html" %}</a>
+      {% block auth %}{% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}

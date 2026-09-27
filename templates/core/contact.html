@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Contact &amp; demo — {{ BRAND.name }}{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow on-dark">Talk to us</span>
+    <h1>Book a demo, ask a question, or <span class="grad-text">switch for free.</span></h1>
+    <p class="lead">Our team replies 7 days a week in Bangla and English — first reply in under 15 minutes during support hours.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container contact-layout">
+    <div class="card reveal">
+      {% if sent %}
+      <div class="result-empty" style="min-height:360px">
+        <span class="icon-tile" style="width:64px;height:64px"><svg class="i i-lg"><use href="#i-check-circle"/></svg></span>
+        <div>
+          <h2 style="font-size:1.8rem;color:var(--ink)">Message received!</h2>
+          <p style="margin-top:.5rem">We'll call you within one business day. Meanwhile, why not try AI Snap &amp; Sell?</p>
+        </div>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center"><a href="{% url 'core:snap' %}#try" class="btn btn-primary">Try AI Snap &amp; Sell</a><a href="{% url 'core:contact' %}" class="btn btn-ghost">Send another</a></div>
+      </div>
+      {% else %}
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="alert danger" style="margin-bottom:1rem"><svg class="i"><use href="#i-alert"/></svg>{{ form.non_field_errors }}</div>{% endif %}
+        <div class="form-grid">
+          {% include "partials/field.html" with field=form.kind full=1 %}
+          {% include "partials/field.html" with field=form.name %}
+          {% include "partials/field.html" with field=form.phone %}
+          {% include "partials/field.html" with field=form.email %}
+          {% include "partials/field.html" with field=form.business_name %}
+          {% include "partials/field.html" with field=form.category %}
+          {% include "partials/field.html" with field=form.facebook_page %}
+          {% include "partials/field.html" with field=form.message full=1 %}
+        </div>
+        <button class="btn btn-primary btn-lg" type="submit" style="margin-top:1.4rem">Send message <svg class="i"><use href="#i-arrow-right"/></svg></button>
+      </form>
+      {% endif %}
+    </div>
+    <aside class="contact-side">
+      <div class="card reveal reveal-d1">
+        <div style="display:grid;gap:1.4rem">
+          <div class="contact-item"><span class="icon-tile"><svg class="i"><use href="#i-phone"/></svg></span><div><b>Call or WhatsApp</b><a href="tel:{{ BRAND.phone|cut:' '|cut:'-' }}" class="muted">{{ BRAND.phone }}</a></div></div>
+          <div class="contact-item"><span class="icon-tile"><svg class="i"><use href="#i-mail"/></svg></span><div><b>Email</b><a href="mailto:{{ BRAND.email }}" class="muted">{{ BRAND.email }}</a></div></div>
+          <div class="contact-item"><span class="icon-tile"><svg class="i"><use href="#i-map"/></svg></span><div><b>Office</b><span class="muted">{{ BRAND.address }}</span></div></div>
+          <div class="contact-item"><span class="icon-tile orange"><svg class="i"><use href="#i-clock"/></svg></span><div><b>Support hours</b><span class="muted">{{ BRAND.support_hours }}</span></div></div>
+        </div>
+      </div>
+      <div class="card reveal reveal-d2" style="background:var(--forest-900);color:#f4efe7;border-color:transparent">
+        <span class="icon-tile dark" style="background:rgba(255,255,255,.08)"><svg class="i"><use href="#i-gift"/></svg></span>
+        <h3 style="color:#fff">Founding-seller offer</h3>
+        <p style="color:rgba(244,239,231,.72)">The first 1,000 sellers get an onboarding call, free migration and founding pricing locked in.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

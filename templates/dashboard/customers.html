@@ -1,0 +1,37 @@
+{% extends "dashboard/base.html" %}
+{% load shop %}
+{% block page_title %}Customers{% endblock %}
+{% block dash %}
+<div class="page-head"><div><h1>Customers</h1><p>Buyers you own — not Facebook. Segments update automatically.</p></div></div>
+<div class="tabs">
+  <a href="{% query segment='' page='' %}" class="{% if not segment %}active{% endif %}">All</a>
+  <a href="{% query segment='vip' page='' %}" class="{% if segment == 'vip' %}active{% endif %}">VIP · 5+ orders</a>
+  <a href="{% query segment='repeat' page='' %}" class="{% if segment == 'repeat' %}active{% endif %}">Repeat</a>
+  <a href="{% query segment='new' page='' %}" class="{% if segment == 'new' %}active{% endif %}">New</a>
+</div>
+<div class="toolbar"><form method="get"><input type="hidden" name="segment" value="{{ segment }}"><input class="input" type="search" name="q" value="{{ q }}" placeholder="Name or phone" style="flex:1;padding:0 1rem;border:1px solid var(--line-strong);background:var(--surface)"><button class="btn btn-dark btn-sm" style="height:42px">Search</button></form></div>
+<section class="panel">
+  {% if page.object_list %}
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Customer</th><th>Location</th><th>Segment</th><th class="num">Orders</th><th class="num">Spent</th><th class="num">Points</th></tr></thead>
+      <tbody>
+        {% for c in page %}
+        <tr>
+          <td><span class="cell-product"><span class="thumb {{ c|thumb_class }}" style="border-radius:50%;width:40px;height:40px">{{ c.name|slice:":1"|upper }}</span><span><b>{{ c.name }}{% if c.phone_verified %} <svg class="i i-sm" style="display:inline;color:var(--emerald);vertical-align:-3px"><use href="#i-check-circle"/></svg>{% endif %}</b><small>{{ c.phone }}</small></span></span></td>
+          <td class="muted">{{ c.city|default:"—" }}</td>
+          <td><span class="badge {% if c.segment == 'VIP' %}badge-orange{% elif c.segment == 'Repeat' %}badge-green{% endif %}">{{ c.segment }}</span></td>
+          <td class="num">{{ c.order_count }}</td>
+          <td class="num"><strong>{{ c.spent|default:0|taka }}</strong></td>
+          <td class="num">{{ c.loyalty_points }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "dashboard/_pagination.html" %}
+  {% else %}
+  <div class="empty"><span class="icon-tile"><svg class="i i-lg"><use href="#i-users"/></svg></span><h3>No customers yet</h3><p>Customers are created automatically when they place an order.</p></div>
+  {% endif %}
+</section>
+{% endblock %}

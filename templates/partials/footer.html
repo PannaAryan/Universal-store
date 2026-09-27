@@ -1,0 +1,62 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <a href="{% url 'core:home' %}" class="logo">{% include "partials/logo.html" %}</a>
+        <p>The AI shop manager for Bangladesh's 2 lakh+ online sellers. Take a photo. Get a store.</p>
+        <form class="newsletter" method="post" action="{% url 'core:newsletter' %}">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <input type="email" name="email" placeholder="Seller tips, monthly" aria-label="Email address" required>
+          <button class="btn btn-primary btn-sm" type="submit" style="height:44px">Subscribe</button>
+        </form>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <ul>
+          <li><a href="{% url 'core:features' %}">Features</a></li>
+          <li><a href="{% url 'core:snap' %}">AI Snap &amp; Sell</a></li>
+          <li><a href="{% url 'core:pricing' %}">Pricing</a></li>
+          <li><a href="{% url 'core:compare' %}">Compare builders</a></li>
+          <li><a href="{% url 'storefront:home' 'nakshi-threads' %}">Demo store</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="{% url 'core:about' %}">About us</a></li>
+          <li><a href="{% url 'core:about' %}#roadmap">Roadmap</a></li>
+          <li><a href="{% url 'core:investors' %}">Investors</a></li>
+          <li><a href="{% url 'core:contact' %}?type=partner">Partner with us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="{% url 'core:help' %}">Help center</a></li>
+          <li><a href="{% url 'core:contact' %}">Book a demo</a></li>
+          <li><a href="{% url 'core:contact' %}?type=migration">Free migration</a></li>
+          <li><a href="{% url 'core:status' %}">System status</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:{{ BRAND.email }}">{{ BRAND.email }}</a></li>
+          <li><a href="tel:{{ BRAND.phone|cut:' '|cut:'-' }}">{{ BRAND.phone }}</a></li>
+          <li>{{ BRAND.address }}</li>
+          <li>{{ BRAND.support_hours }}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; {% now "Y" %} {{ BRAND.name }}. Made in Dhaka.</span>
+      <span style="display:flex;gap:1.25rem;flex-wrap:wrap">
+        <a href="{% url 'core:legal' 'terms' %}">Terms</a>
+        <a href="{% url 'core:legal' 'privacy' %}">Privacy</a>
+        <a href="{% url 'core:legal' 'refund' %}">Refund &amp; SLA</a>
+        <a href="{% url 'core:status' %}" class="status-link"><span class="dot pulse-dot"></span> All systems operational</a>
+      </span>
+    </div>
+  </div>
+</footer>

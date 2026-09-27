@@ -1,0 +1,44 @@
+{% extends "dashboard/base.html" %}
+{% block page_title %}Manual order{% endblock %}
+{% block dash %}
+<a href="{% url 'dashboard:orders' %}" class="crumb"><svg class="i i-sm"><use href="#i-arrow-left"/></svg> Orders</a>
+<div class="page-head"><div><h1>Log a manual order</h1><p>For orders taken on Messenger, WhatsApp or by phone. Stock and the fraud shield update automatically.</p></div></div>
+<form method="post" novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="alert danger" style="margin-bottom:1rem"><svg class="i"><use href="#i-alert"/></svg>{{ form.non_field_errors }}</div>{% endif %}
+  <div class="panel"><div class="panel-body">
+    <div class="form-section">
+      <div><h3>Items</h3><p>Choose up to three products.</p></div>
+      <div style="display:grid;gap:12px">
+        {% for i in "123" %}
+          {% with pf="product_"|add:i qf="qty_"|add:i %}
+          <div class="form-grid" style="grid-template-columns:minmax(0,1fr) 110px">
+            {% for field in form %}{% if field.name == pf %}{% include "partials/field.html" %}{% endif %}{% endfor %}
+            {% for field in form %}{% if field.name == qf %}{% include "partials/field.html" %}{% endif %}{% endfor %}
+          </div>
+          {% endwith %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="form-section">
+      <div><h3>Customer</h3><p>We'll create or update their profile by phone number.</p></div>
+      <div class="form-grid">
+        {% include "partials/field.html" with field=form.name %}
+        {% include "partials/field.html" with field=form.phone %}
+        {% include "partials/field.html" with field=form.address full=1 %}
+        {% include "partials/field.html" with field=form.city %}
+        <div style="align-self:end;padding-bottom:12px">{% include "partials/field.html" with field=form.inside_dhaka %}</div>
+      </div>
+    </div>
+    <div class="form-section">
+      <div><h3>Payment &amp; source</h3></div>
+      <div class="form-grid">
+        {% include "partials/field.html" with field=form.source %}
+        {% include "partials/field.html" with field=form.payment_method %}
+        {% include "partials/field.html" with field=form.note full=1 %}
+      </div>
+    </div>
+  </div></div>
+  <div class="sticky-bar"><a href="{% url 'dashboard:orders' %}" class="btn btn-ghost">Cancel</a><button class="btn btn-green">Create order</button></div>
+</form>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "dashboard/base.html" %}
+{% block page_title %}Settings{% endblock %}
+{% block dash %}
+<div class="page-head"><div><h1>Store settings</h1><p>Branding, delivery, payments and fraud protection.</p></div><div class="actions"><a href="{{ request.store.get_absolute_url }}" target="_blank" class="btn btn-ghost"><svg class="i i-sm"><use href="#i-external"/></svg> View store</a></div></div>
+<form method="post" enctype="multipart/form-data" novalidate>
+  {% csrf_token %}
+  <div class="panel"><div class="panel-body">
+    <div class="form-section">
+      <div><h3>Store details</h3><p>How your store appears to buyers.</p></div>
+      <div class="form-grid">
+        {% include "partials/field.html" with field=form.name %}
+        <div class="field{% if form.slug.errors %} has-error{% endif %}"><label for="id_slug">Store address</label><div class="input-affix">{{ form.slug }}<span>.dokan.ai</span></div>{% for e in form.slug.errors %}<p class="error">{{ e }}</p>{% endfor %}</div>
+        {% include "partials/field.html" with field=form.tagline full=1 %}
+        {% include "partials/field.html" with field=form.category %}
+        {% include "partials/field.html" with field=form.custom_domain %}
+        {% include "partials/field.html" with field=form.is_live full=1 %}
+      </div>
+    </div>
+    <div class="form-section">
+      <div><h3>Branding</h3><p>Logo, colour and theme.</p></div>
+      <div class="form-grid">
+        {% include "partials/field.html" with field=form.logo full=1 %}
+        {% include "partials/field.html" with field=form.brand_color %}
+        {% include "partials/field.html" with field=form.theme %}
+      </div>
+    </div>
+    <div class="form-section">
+      <div><h3>Contact</h3><p>Shown in your store footer.</p></div>
+      <div class="form-grid">
+        {% include "partials/field.html" with field=form.phone %}
+        {% include "partials/field.html" with field=form.email %}
+        {% include "partials/field.html" with field=form.address full=1 %}
+        {% include "partials/field.html" with field=form.facebook_url full=1 %}
+      </div>
+    </div>
+    <div class="form-section">
+      <div><h3>Delivery</h3><p>Fees and couriers.</p></div>
+      <div class="form-grid">
+        <div class="field"><label for="id_delivery_fee_dhaka">Inside Dhaka</label><div class="input-affix"><span>৳</span>{{ form.delivery_fee_dhaka }}</div></div>
+        <div class="field"><label for="id_delivery_fee_outside">Outside Dhaka</label><div class="input-affix"><span>৳</span>{{ form.delivery_fee_outside }}</div></div>
+        {% include "partials/field.html" with field=form.couriers full=1 %}
+      </div>
+    </div>
+    <div class="form-section">
+      <div><h3>Payments</h3><p>What buyers can choose at checkout.</p></div>
+      <div>{% include "partials/field.html" with field=form.payments %}</div>
+    </div>
+    <div class="form-section">
+      <div><h3>Fraud shield</h3><p>Stop fake COD orders before they cost you courier fees.</p></div>
+      <div style="display:grid;gap:16px">
+        {% include "partials/field.html" with field=form.otp_checkout %}
+        {% include "partials/field.html" with field=form.advance_threshold %}
+        <div class="alert"><svg class="i"><use href="#i-info"/></svg><span>When a COD order's risk score is at or above this number, buyers pay the delivery fee in advance by bKash or Nagad. 60 is a good default.</span></div>
+      </div>
+    </div>
+  </div></div>
+  <div class="sticky-bar"><button class="btn btn-green">Save settings</button></div>
+</form>
+{% endblock %}

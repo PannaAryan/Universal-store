@@ -1,0 +1,85 @@
+{% extends "dashboard/base.html" %}
+{% block page_title %}{% if product %}Edit product{% else %}New product{% endif %}{% endblock %}
+{% block dash %}
+<a href="{% url 'dashboard:products' %}" class="crumb"><svg class="i i-sm"><use href="#i-arrow-left"/></svg> Products</a>
+<div class="page-head">
+  <div><h1>{% if product %}{{ product.title }}{% else %}Snap &amp; Sell{% endif %}</h1><p>{% if product %}Update details, stock and SEO.{% else %}Add a photo and price — AI writes the rest.{% endif %}</p></div>
+  {% if product %}<div class="actions"><a href="{{ product.get_absolute_url }}" target="_blank" class="btn btn-ghost"><svg class="i i-sm"><use href="#i-eye"/></svg> View in store</a></div>{% endif %}
+</div>
+
+<form method="post" enctype="multipart/form-data" novalidate>
+  {% csrf_token %}
+  {{ form.ai_generated }}
+  {% if form.non_field_errors %}<div class="alert danger" style="margin-bottom:1rem"><svg class="i"><use href="#i-alert"/></svg>{{ form.non_field_errors }}</div>{% endif %}
+  <div class="dash-grid" style="grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)">
+    <div class="stack">
+      <section class="ai-panel">
+        <h3><svg class="i"><use href="#i-sparkle"/></svg> AI Snap &amp; Sell</h3>
+        <p>Upload a photo, then add a short title and price. We'll write the description, highlights, variants, tags and SEO.</p>
+        <label class="dropzone" data-dropzone>
+          {{ form.image }}
+          {% if product.image %}<img src="{{ product.image.url }}" alt="">{% endif %}
+          <span>
+            <span class="dz-icon"><svg class="i i-lg"><use href="#i-camera"/></svg></span>
+            <strong style="display:block;margin-top:.7rem">Drop or take a photo</strong>
+            <small>JPG, PNG or WebP · up to 5 MB</small>
+          </span>
+        </label>
+        {% for e in form.image.errors %}<p class="error" style="color:#ffb4a6;margin-top:.5rem">{{ e }}</p>{% endfor %}
+        <button type="button" class="btn btn-primary btn-block btn-lg" style="margin-top:1rem" data-ai-generate data-url="{% url 'dashboard:ai_generate' %}"><span class="spinner"></span><svg class="i"><use href="#i-sparkle"/></svg> Write listing with AI</button>
+        <div class="ai-quota"><span><span data-ai-used>{{ ai_used }}</span> of {{ ai_quota|default:"unlimited" }} AI listings used this month</span><a href="{% url 'dashboard:billing' %}" style="text-decoration:underline">Get more</a></div>
+      </section>
+      <section class="panel"><div class="panel-body" style="display:grid;gap:16px">
+        <h3 style="font-size:1rem">Pricing</h3>
+        <div class="form-grid">
+          <div class="field{% if form.price.errors %} has-error{% endif %}"><label for="id_price">Price</label><div class="input-affix"><span>৳</span>{{ form.price }}</div>{% for e in form.price.errors %}<p class="error">{{ e }}</p>{% endfor %}</div>
+          <div class="field{% if form.compare_at_price.errors %} has-error{% endif %}"><label for="id_compare_at_price">Compare-at <span class="muted" style="font-weight:400">(optional)</span></label><div class="input-affix"><span>৳</span>{{ form.compare_at_price }}</div>{% for e in form.compare_at_price.errors %}<p class="error">{{ e }}</p>{% endfor %}</div>
+          <div class="field full"><label for="id_cost_price">Cost price <span class="muted" style="font-weight:400">(for profit reports)</span></label><div class="input-affix"><span>৳</span>{{ form.cost_price }}</div></div>
+        </div>
+      </div></section>
+      <section class="panel"><div class="panel-body" style="display:grid;gap:16px">
+        <h3 style="font-size:1rem">Inventory</h3>
+        <div class="form-grid">
+          {% include "partials/field.html" with field=form.stock %}
+          {% include "partials/field.html" with field=form.low_stock_threshold %}
+          {% include "partials/field.html" with field=form.sku full=1 %}
+        </div>
+        {% include "partials/field.html" with field=form.is_active %}
+      </div></section>
+    </div>
+
+    <div class="stack">
+      <section class="panel"><div class="panel-body" style="display:grid;gap:16px">
+        <h3 style="font-size:1rem">Listing</h3>
+        {% include "partials/field.html" with field=form.title %}
+        {% include "partials/field.html" with field=form.title_bn %}
+        <div class="form-grid">
+          {% include "partials/field.html" with field=form.category %}
+          {% include "partials/field.html" with field=form.new_category %}
+        </div>
+        {% include "partials/field.html" with field=form.description_en %}
+        {% include "partials/field.html" with field=form.description_bn %}
+        {% include "partials/field.html" with field=form.highlights %}
+        <div class="form-grid">
+          {% include "partials/field.html" with field=form.variants %}
+          {% include "partials/field.html" with field=form.tags %}
+        </div>
+      </div></section>
+      <section class="panel"><div class="panel-body" style="display:grid;gap:16px">
+        <h3 style="font-size:1rem">Search engine listing</h3>
+        <div class="field"><label for="id_seo_title" style="display:flex;justify-content:space-between">SEO title <small class="muted" data-count="id_seo_title" data-max="60"></small></label>{{ form.seo_title }}</div>
+        <div class="field"><label for="id_seo_description" style="display:flex;justify-content:space-between">SEO description <small class="muted" data-count="id_seo_description" data-max="155"></small></label>{{ form.seo_description }}</div>
+      </div></section>
+    </div>
+  </div>
+  <div class="sticky-bar">
+    {% if product %}<button type="submit" form="delete-form" class="btn btn-danger" style="margin-right:auto"><svg class="i i-sm"><use href="#i-trash"/></svg> Delete</button>{% endif %}
+    <a href="{% url 'dashboard:products' %}" class="btn btn-ghost">Cancel</a>
+    {% if not product %}<button type="submit" name="save_add" class="btn btn-light">Save &amp; add another</button>{% endif %}
+    <button type="submit" class="btn btn-green">{% if product %}Save changes{% else %}Publish product{% endif %}</button>
+  </div>
+</form>
+{% if product %}
+<form id="delete-form" method="post" action="{% url 'dashboard:product_delete' product.pk %}" data-confirm="Delete this product? If it has orders it will be hidden instead.">{% csrf_token %}</form>
+{% endif %}
+{% endblock %}

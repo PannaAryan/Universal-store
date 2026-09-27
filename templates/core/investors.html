@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Investors — {{ BRAND.name }}{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow on-dark">Investor overview · 2026</span>
+    <h1>The AI shop manager for <span class="grad-text">Bangladesh's online sellers.</span></h1>
+    <p class="lead">Raising a <strong style="color:#fff">US$300k–500k seed</strong> for 18–24 months to reach ~5,000 paying stores and a clear path to monthly break-even.</p>
+    <div class="hero-ctas"><a href="{% url 'core:contact' %}?type=investor" class="btn btn-primary btn-lg">Request the deck</a><a href="#economics" class="btn btn-ghost-light btn-lg">See unit economics</a></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Market</span>
+      <h2>A US$6–7.5B market growing at double digits.</h2>
+      <p>Online is still only 3–5% of total retail. Forecasts range from US$9.7B to US$15.4B by 2029 — estimates differ by method, so we quote a range and name each source.</p>
+    </div>
+    <div class="grid grid-3">
+      {% for s in c.MARKET_STATS %}
+      <div class="stat-card reveal reveal-d{{ forloop.counter }}{% if forloop.last %} dark{% endif %}"><strong>{{ s.value }}</strong><p>{{ s.label }}</p></div>
+      {% endfor %}
+    </div>
+    <p class="source"><strong>Sources:</strong> {{ c.MARKET_SOURCES }}</p>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container problem">
+    <div class="reveal">
+      <span class="eyebrow">Opportunity</span>
+      <h2 style="font-size:clamp(2rem,4vw,2.8rem);margin-top:.9rem">~৳600 crore a year in store subscriptions.</h2>
+      <p class="muted" style="margin-top:1rem;font-size:1.05rem">We size by subscription spend, not GMV. Value-added services like SMS, AI credits and payments can add 20–30% on top.</p>
+      <div class="problem-quote"><strong>Upside:</strong> 1.18 crore small enterprises (Economic Census 2024). Digitising 5% adds ~5.9 lakh more potential stores.</div>
+      <p class="source">Our estimate. Assumes ৳1,000/month average price and ৳122 = US$1. Seller counts: e-CAB via The Business Standard (2024).</p>
+    </div>
+    <div class="tam">
+      {% for t in c.TAM %}
+      <div class="tam-row reveal reveal-d{{ forloop.counter }}">
+        <span class="tier">{{ t.tier }}</span>
+        <span>{{ t.who }}</span>
+        <span class="val">{{ t.value }}<small>{{ t.sub }}</small></span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" id="economics">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Unit economics</span>
+      <h2>Each seller pays back in under four months.</h2>
+      <p>Lifetime value ~৳16,500 at 5% monthly churn (~20 months). CAC payback ~3.6 months.</p>
+    </div>
+    <div class="grid grid-4">
+      {% for s in c.UNIT_ECONOMICS %}
+      <div class="stat-card reveal reveal-d{{ forloop.counter0 }}{% if forloop.last %} dark{% endif %}"><strong>{{ s.value }}</strong><p>{{ s.label }}</p></div>
+      {% endfor %}
+    </div>
+    <p class="source">Planning assumptions, not results. Facebook CPC in Bangladesh is about ৳2–15 (Agent Wise X, 2026).</p>
+  </div>
+</section>
+
+<section class="section section-dark">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow on-dark">5-year target</span>
+      <h2>৳59 crore ARR from 35,000 paying stores.</h2>
+      <p>ARPU rises from ৳1,100 to ৳1,400. Year 5 ≈ US$4.8M ARR — about 14–17% of active F-commerce sellers.</p>
+    </div>
+    <div class="bars reveal" role="img" aria-label="Annual recurring revenue by year, from 2.0 crore in year 1 to 58.8 crore in year 5">
+      {% for p in projections %}
+      <div class="bar">
+        <span class="bar-val">৳{{ p.arr }} cr</span>
+        <span class="bar-fill" style="height:{{ p.pct }}%;transition-delay:{{ forloop.counter0 }}00ms"></span>
+        <span class="bar-label" style="color:rgba(244,239,231,.66)"><strong style="color:#fff">{{ p.year }}</strong><br>{{ p.stores }} stores</span>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="source muted">Target, not forecast. Bars show annual recurring revenue (ARR); labels show paying stores at year end. ৳122 = US$1.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Business model</span>
+      <h2>Freemium, with unlimited orders on every paid plan.</h2>
+      <p>Growth sits just above Zatiq's entry price and below Storola and StoreX — with more value because of AI and no order caps.</p>
+    </div>
+    <div class="grid grid-4">
+      <div class="card reveal"><span class="badge">Shuru</span><h3 style="font-size:2rem;margin-top:.8rem">৳0</h3><p>Subdomain, 25 products, COD, 1 courier, 20 AI listings</p></div>
+      <div class="card reveal reveal-d1" style="border-color:var(--saffron);box-shadow:0 0 0 3px var(--saffron-soft)"><span class="badge badge-orange">Growth · main plan</span><h3 style="font-size:2rem;margin-top:.8rem">৳799</h3><p>Custom domain, all payments and couriers, fraud shield, 200 AI listings</p></div>
+      <div class="card reveal reveal-d2"><span class="badge">Business</span><h3 style="font-size:2rem;margin-top:.8rem">৳1,799</h3><p>Finance and VAT, catalog sync, Messenger and WhatsApp order bot</p></div>
+      <div class="card reveal reveal-d3"><span class="badge">Scale</span><h3 style="font-size:2rem;margin-top:.8rem">৳3,999</h3><p>Unlimited staff and warehouses, API, account manager</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Risks</span>
+      <h2>Known risks, planned answers.</h2>
+    </div>
+    <div class="fix-table reveal">
+      <div class="fix-row head"><span>Risk</span><span></span><span>Mitigation</span></div>
+      {% for risk, fix in c.RISKS %}
+      <div class="fix-row">
+        <span class="fix-pain"><svg class="i" style="color:var(--warning)"><use href="#i-alert"/></svg>{{ risk }}</span>
+        <span class="fix-arrow"><svg class="i"><use href="#i-arrow-right"/></svg></span>
+        <span class="fix-fix"><svg class="i"><use href="#i-shield"/></svg>{{ fix }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container problem">
+    <div class="reveal">
+      <span class="eyebrow">The ask</span>
+      <h2 style="font-size:clamp(2rem,4vw,2.8rem);margin-top:.9rem">Raising US$300k–500k seed for 18–24 months.</h2>
+      <p class="muted" style="margin-top:1rem;font-size:1.05rem"><strong style="color:var(--ink)">Milestone:</strong> ~5,000 paying stores and a clear path to monthly break-even.</p>
+      <div class="hero-ctas"><a href="{% url 'core:contact' %}?type=investor" class="btn btn-primary btn-lg">Talk to the founders <svg class="i"><use href="#i-arrow-right"/></svg></a></div>
+    </div>
+    <div class="card reveal reveal-d1">
+      <h3 style="margin-bottom:1.4rem">Use of funds</h3>
+      <div class="funds">
+        {% for f in c.USE_OF_FUNDS %}
+        <div class="fund-row">
+          <span>{{ f.label }}</span><b>{{ f.pct }}%</b>
+          <div class="mock-bar"><i style="width:{{ f.pct }}%;{% if forloop.first %}background:linear-gradient(90deg,var(--saffron),var(--saffron-300)){% endif %}"></i></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+<div style="height:clamp(24px,4vw,48px)"></div>
+{% endblock %}

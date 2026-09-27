@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}AI Snap &amp; Sell — {{ BRAND.name }}{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow on-dark">AI Snap &amp; Sell</span>
+    <h1>Take a photo. <span class="grad-text">AI writes the listing.</span></h1>
+    <p class="lead">Upload one product photo with a short title and price. In under a minute you get a Bangla and English description, highlights, variants, tags and SEO — ready to publish to your store, Facebook and Instagram.</p>
+    <div class="hero-ctas"><a href="#try" class="btn btn-primary btn-lg"><svg class="i"><use href="#i-camera"/></svg> Try it now — free</a><a href="{% url 'accounts:signup' %}" class="btn btn-ghost-light btn-lg">Create my store</a></div>
+  </div>
+</section>
+
+<section class="section section-white" style="padding-bottom:0">
+  <div class="container">
+    <div class="grid grid-3">
+      {% for s in c.SNAP_STEPS %}
+      <div class="card reveal reveal-d{{ forloop.counter }}">
+        <div class="step-n" style="box-shadow:0 0 0 6px var(--saffron-soft)">{{ s.n }}</div>
+        <h3>{{ s.title }}</h3>
+        <p>{{ s.text }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section-white" id="try">
+  <div class="container">
+    <div class="split-head">
+      <div class="section-head reveal">
+        <span class="eyebrow">Live demo</span>
+        <h2>Try it with your own product.</h2>
+        <p>No signup needed. Add a photo for the best result — or just a title and price.</p>
+      </div>
+      <span class="badge badge-orange reveal" data-snap-remaining>5 free tries</span>
+    </div>
+    <div class="demo">
+      <form class="card reveal" method="post" action="{% url 'core:snap_demo' %}" enctype="multipart/form-data" data-snap-demo style="display:grid;gap:16px">
+        {% csrf_token %}
+        <label class="dropzone" data-dropzone>
+          <input type="file" name="image" accept="image/jpeg,image/png,image/webp">
+          <span>
+            <span class="dz-icon"><svg class="i i-lg"><use href="#i-upload"/></svg></span>
+            <strong style="display:block;margin-top:.7rem">Drop a product photo</strong>
+            <small>or tap to take one · JPG, PNG, WebP up to 5 MB</small>
+          </span>
+        </label>
+        <div class="field">
+          <label for="id_title">Short title</label>
+          {{ form.title }}
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="id_price">Price</label>
+            <div class="input-affix"><span>৳</span>{{ form.price }}</div>
+          </div>
+          <div class="field">
+            <label for="id_category">Category</label>
+            {{ form.category }}
+          </div>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block" type="submit"><span class="spinner"></span><svg class="i"><use href="#i-sparkle"/></svg> Write my listing</button>
+        <p class="muted" style="font-size:.82rem;text-align:center">Photos are used only to write your listing and aren't stored.</p>
+      </form>
+      <div class="card result reveal reveal-d1" data-snap-result aria-live="polite">
+        <div class="result-empty">
+          <span class="icon-tile orange"><svg class="i"><use href="#i-sparkle"/></svg></span>
+          <div>
+            <strong style="display:block;color:var(--ink);font-family:var(--font-display);font-size:1.15rem">Your listing appears here</strong>
+            <p>Title · Bangla &amp; English description · highlights · variants · tags · Google preview</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-dark">
+  <div class="container feature-row">
+    <div class="reveal">
+      <span class="eyebrow on-dark">AI sales assistant</span>
+      <h2 style="color:#fff">Then AI answers buyers and takes orders — 24/7, in Bangla.</h2>
+      <p class="muted" style="margin-top:1rem;font-size:1.05rem">No more missed messages at midnight. The assistant knows your products, prices, stock and delivery fees, and turns chats on your store, Messenger and WhatsApp into confirmed orders.</p>
+      <ul class="check-list" style="color:rgba(244,239,231,.85)">
+        <li><svg class="i" style="color:var(--saffron-300)"><use href="#i-check"/></svg>Answers size, price, stock and delivery questions</li>
+        <li><svg class="i" style="color:var(--saffron-300)"><use href="#i-check"/></svg>Collects name, phone and address and creates the order</li>
+        <li><svg class="i" style="color:var(--saffron-300)"><use href="#i-check"/></svg>Hands over to you when a human is needed</li>
+      </ul>
+    </div>
+    <div class="feature-media dark reveal reveal-d1" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1)">
+      <div class="mock">
+        <div class="mock-bubble in" lang="bn">এই কুশন কভারের দাম কত?</div>
+        <div class="mock-bubble out" lang="bn">নকশি কাঁথা কুশন কভার ৳৬৫০ (২টা ৳১,২০০)। স্টকে ১২টা আছে। অর্ডার করবেন?</div>
+        <div class="mock-bubble in" lang="bn">২টা দিন। উত্তরা সেক্টর ৭</div>
+        <div class="mock-bubble out" lang="bn">ধন্যবাদ! অর্ডার #২৬০৯৩৩১৮ কনফার্ম হয়েছে। ডেলিভারি ২ দিনের মধ্যে ✅</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include "partials/cta_band.html" %}
+<div style="height:clamp(48px,7vw,80px)"></div>
+{% endblock %}

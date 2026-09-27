@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% block page_title %}Dashboard{% endblock %} · {{ request.store.name }} — {{ BRAND.name }}{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/dashboard.css' %}"><meta name="robots" content="noindex">{% endblock %}
+{% block nav %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+{% with u=request.resolver_match.url_name store=request.store %}
+<div class="app">
+  <aside class="sidebar" aria-label="Dashboard">
+    <a href="{% url 'core:home' %}" class="logo">{% include "partials/logo.html" %}</a>
+    <div class="store-switch">
+      <span class="store-avatar" style="--brand:{{ store.brand_color }}">{% if store.logo %}<img src="{{ store.logo.url }}" alt="">{% else %}{{ store.name|slice:":1"|upper }}{% endif %}</span>
+      <span style="min-width:0"><b style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ store.name }}</b><small>{{ store.plan.name|default:"Shuru" }} plan</small></span>
+    </div>
+    <nav class="side-nav">
+      <a href="{% url 'dashboard:product_add' %}" class="snap"><svg class="i"><use href="#i-camera"/></svg> Snap &amp; Sell</a>
+      <a href="{% url 'dashboard:home' %}" class="{% if u == 'home' %}active{% endif %}"><svg class="i"><use href="#i-home"/></svg> Overview</a>
+      <a href="{% url 'dashboard:orders' %}" class="{% if 'order' in u %}active{% endif %}"><svg class="i"><use href="#i-bag"/></svg> Orders{% if pending_count %}<span class="count">{{ pending_count }}</span>{% endif %}</a>
+      <a href="{% url 'dashboard:products' %}" class="{% if 'product' in u %}active{% endif %}"><svg class="i"><use href="#i-box"/></svg> Products</a>
+      <a href="{% url 'dashboard:customers' %}" class="{% if u == 'customers' %}active{% endif %}"><svg class="i"><use href="#i-users"/></svg> Customers</a>
+      <span class="side-label">Grow</span>
+      <a href="{% url 'dashboard:coupons' %}" class="{% if u == 'coupons' %}active{% endif %}"><svg class="i"><use href="#i-tag"/></svg> Coupons</a>
+      <a href="{% url 'dashboard:analytics' %}" class="{% if u == 'analytics' %}active{% endif %}"><svg class="i"><use href="#i-chart"/></svg> Analytics</a>
+      <span class="side-label">Store</span>
+      <a href="{{ store.get_absolute_url }}" target="_blank" rel="noopener"><svg class="i"><use href="#i-external"/></svg> View store</a>
+      <a href="{% url 'dashboard:settings' %}" class="{% if u == 'settings' %}active{% endif %}"><svg class="i"><use href="#i-settings"/></svg> Settings</a>
+      <a href="{% url 'dashboard:billing' %}" class="{% if u == 'billing' %}active{% endif %}"><svg class="i"><use href="#i-card"/></svg> Plan &amp; billing</a>
+      <a href="{% url 'core:help' %}"><svg class="i"><use href="#i-headset"/></svg> Help &amp; support</a>
+    </nav>
+    <div class="side-foot">
+      {% if store.trial_days_left %}
+      <div class="trial-card">
+        <b>{{ store.trial_days_left }} days</b> left in your free trial
+        <div class="trial-bar"><i style="width:{% widthratio store.trial_days_left 90 100 %}%"></i></div>
+        Reach 10 orders for 60 days, 50 for 90.
+      </div>
+      {% endif %}
+      <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}
+        <button class="side-nav" style="all:unset;display:flex;align-items:center;gap:.75rem;padding:.62rem .75rem;cursor:pointer;font-size:.92rem;width:100%;box-sizing:border-box;border-radius:10px"><svg class="i"><use href="#i-logout"/></svg> Sign out</button>
+      </form>
+    </div>
+  </aside>
+  <div class="sidebar-scrim" data-sidebar-scrim></div>
+  <div class="main">
+    <header class="topbar">
+      <button class="burger" type="button" data-sidebar-toggle aria-label="Open menu"><svg class="i"><use href="#i-menu"/></svg></button>
+      <form class="topbar-search" action="{% url 'dashboard:orders' %}" role="search">
+        <svg class="i"><use href="#i-search"/></svg>
+        <input type="search" name="q" placeholder="Search orders by number, name or phone" aria-label="Search orders">
+      </form>
+      <div class="topbar-actions">
+        <button class="btn btn-light btn-sm hide-xs" type="button" data-copy="{{ request.scheme }}://{{ request.get_host }}{{ store.get_absolute_url }}"><svg class="i i-sm"><use href="#i-copy"/></svg> Copy store link</button>
+        <span class="user-chip"><span>{{ user.first_name|default:user.email|slice:":1"|upper }}</span><b>{{ user.first_name|default:user.email }}</b></span>
+      </div>
+    </header>
+    <div class="content">
+      {% block dash %}{% endblock %}
+    </div>
+  </div>
+</div>
+{% endwith %}
+{% endblock %}

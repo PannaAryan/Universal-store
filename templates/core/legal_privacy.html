@@ -1,0 +1,20 @@
+{% extends "core/legal_base.html" %}
+{% block prose %}
+<p>We collect only what we need to run your store and your buyers' orders, and we never sell personal data.</p>
+<h2>What we collect</h2>
+<ul>
+  <li><strong>Sellers:</strong> name, email, phone, store details and billing history.</li>
+  <li><strong>Buyers:</strong> name, phone, delivery address and order history, collected on behalf of the seller.</li>
+  <li><strong>Usage:</strong> basic logs and analytics to keep the platform secure and fast.</li>
+</ul>
+<h2>How we use it</h2>
+<p>To host stores, process orders, send OTP codes and order updates, prevent fraud, provide support and improve the product.</p>
+<h2>Fraud shield</h2>
+<p>To reduce fake cash-on-delivery orders, we compute a risk score from delivery outcomes linked to a phone number across stores on our platform. Only the score and a short reason are shown to sellers — never another store's customer details.</p>
+<h2>AI processing</h2>
+<p>Photos and text you submit to AI Snap &amp; Sell are sent to our AI provider solely to generate your listing and are not used to build public profiles.</p>
+<h2>Sharing</h2>
+<p>We share data with payment gateways, couriers and SMS providers only as needed to complete orders, and with authorities when legally required.</p>
+<h2>Your rights</h2>
+<p>You can access, correct, export or delete your data at any time. Email <a class="link" href="mailto:{{ BRAND.email }}">{{ BRAND.email }}</a>.</p>
+{% endblock %}

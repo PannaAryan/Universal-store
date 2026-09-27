@@ -1,0 +1,39 @@
+{% extends "dashboard/base.html" %}
+{% load humanize %}
+{% block page_title %}Plan &amp; billing{% endblock %}
+{% block dash %}
+{% with store=request.store %}
+<div class="page-head"><div><h1>Plan &amp; billing</h1><p>You're on <strong>{{ store.plan.name|default:"Shuru" }}</strong>, billed {{ store.get_billing_cycle_display|lower }}.{% if store.trial_days_left %} {{ store.trial_days_left }} trial days left.{% endif %}</p></div></div>
+<div class="grid grid-3" style="margin-bottom:24px">
+  <div class="kpi"><strong>{{ product_count }}{% if store.plan.product_limit %}<small class="muted" style="font-size:1rem"> / {{ store.plan.product_limit }}</small>{% endif %}</strong><span>Products</span>{% if store.plan.product_limit %}<div class="progress" style="margin-top:.8rem"><i style="width:{% widthratio product_count store.plan.product_limit 100 %}%"></i></div>{% endif %}</div>
+  <div class="kpi"><strong>{{ ai_used }}{% if store.ai_quota %}<small class="muted" style="font-size:1rem"> / {{ store.ai_quota }}</small>{% endif %}</strong><span>AI listings this month</span>{% if store.ai_quota %}<div class="progress" style="margin-top:.8rem"><i style="width:{% widthratio ai_used store.ai_quota 100 %}%"></i></div>{% endif %}</div>
+  <div class="kpi"><strong>Unlimited</strong><span>Orders — on every paid plan</span></div>
+</div>
+<div data-billing>
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
+    <h2 style="font-size:1.2rem">Change plan</h2>
+    <div class="billing-toggle" role="group" aria-label="Billing period">
+      <button type="button" class="active" data-billing-set="monthly">Monthly</button>
+      <button type="button" data-billing-set="annual">Annual <span class="badge badge-orange">2 months free</span></button>
+    </div>
+  </div>
+  <div class="pricing">
+    {% for plan in plans %}
+    <article class="plan{% if plan == store.plan %} plan-current{% endif %}">
+      {% if plan == store.plan %}<span class="plan-flag" style="background:var(--emerald)">Current plan</span>{% elif plan.is_featured %}<span class="plan-flag">Most popular</span>{% endif %}
+      <h3>{{ plan.name }}</h3>
+      <p class="plan-tagline">{{ plan.tagline }}</p>
+      <div class="plan-price"><strong><span data-price-monthly>৳{{ plan.price_monthly|intcomma }}</span><span data-price-annual>৳{{ plan.price_annual_monthly|intcomma }}</span></strong><span class="plan-period">/month</span></div>
+      <form method="post" style="margin-top:auto">
+        {% csrf_token %}
+        <input type="hidden" name="plan" value="{{ plan.slug }}"><input type="hidden" name="cycle" value="monthly">
+        <button class="btn {% if plan == store.plan %}btn-ghost{% else %}btn-dark{% endif %} btn-block" {% if plan == store.plan %}disabled{% endif %}>{% if plan == store.plan %}Your plan{% elif plan.price_monthly > store.plan.price_monthly %}Upgrade{% else %}Switch{% endif %}</button>
+      </form>
+      <ul class="plan-features">{% for f in plan.feature_list %}<li><svg class="i"><use href="#i-check"/></svg>{{ f }}</li>{% endfor %}</ul>
+    </article>
+    {% endfor %}
+  </div>
+</div>
+<div class="alert" style="margin-top:24px"><svg class="i"><use href="#i-info"/></svg><span>Billing is in BDT via bKash, Nagad or card. Your trial extends to 60 days at 10 orders and 90 days at 50 orders. Questions? <a class="link" href="{% url 'core:contact' %}">Contact us</a>.</span></div>
+{% endwith %}
+{% endblock %}

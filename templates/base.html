@@ -1,0 +1,29 @@
+{% load static %}<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ BRAND.name }} — {{ BRAND.tagline }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}The AI shop manager for Bangladesh's online sellers. Upload a product photo and get a working online store with orders, couriers and bKash, Nagad and COD payments.{% endblock %}">
+  <meta name="theme-color" content="#0b2a21">
+  <meta property="og:title" content="{{ BRAND.name }} — {{ BRAND.tagline }}">
+  <meta property="og:description" content="AI store builder for Bangladeshi sellers: photo in, store out.">
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&family=Hind+Siliguri:wght@400;500;600&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_head %}{% endblock %}
+  <script>document.documentElement.classList.remove('no-js')</script>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  {% include "partials/icons.html" %}
+  <a href="#main" class="sr-only">Skip to content</a>
+  {% block nav %}{% include "partials/nav.html" %}{% endblock %}
+  <main id="main">{% block content %}{% endblock %}</main>
+  {% block footer %}{% include "partials/footer.html" %}{% endblock %}
+  {% include "partials/messages.html" %}
+  <script src="{% static 'js/site.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

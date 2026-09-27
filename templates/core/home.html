@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ============ HERO ============ -->
+<section class="hero-wrap">
+  <div class="container">
+    <div class="hero">
+      <div>
+        <a href="{% url 'core:snap' %}" class="hero-pill reveal">
+          <span class="badge">New</span> AI Snap &amp; Sell writes your listing in Bangla &amp; English
+          <svg class="i i-sm"><use href="#i-arrow-right"/></svg>
+        </a>
+        <h1 class="reveal reveal-d1">Take a photo.<br><span class="grad-text">Get a store.</span></h1>
+        <p class="hero-lead reveal reveal-d2">
+          The AI shop manager for Bangladesh's 2 lakh+ online sellers. Upload a product photo and get a working online store — with orders, couriers and bKash, Nagad &amp; COD payments built in.
+          <span class="bn" lang="bn">ছবি তুলুন, দোকান খুলুন।</span>
+        </p>
+        <div class="hero-ctas reveal reveal-d3">
+          <a href="{% url 'accounts:signup' %}" class="btn btn-primary btn-lg">Create my free store <svg class="i"><use href="#i-arrow-right"/></svg></a>
+          <a href="{% url 'core:snap' %}#try" class="btn btn-ghost-light btn-lg"><svg class="i"><use href="#i-camera"/></svg> Try AI Snap &amp; Sell</a>
+        </div>
+        <div class="hero-note reveal reveal-d3">
+          <span><svg class="i"><use href="#i-check-circle"/></svg> Live in 10 minutes</span>
+          <span><svg class="i"><use href="#i-check-circle"/></svg> No card needed</span>
+          <span><svg class="i"><use href="#i-check-circle"/></svg> Unlimited orders</span>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal reveal-d2" aria-hidden="true">
+        <div class="hv-card hv-phone">
+          <div class="hv-screen">
+            <div class="hv-photo"></div>
+            <div class="hv-frame"></div>
+            <div class="hv-shutter"></div>
+            <div class="hv-flash"></div>
+          </div>
+        </div>
+        <svg class="hv-arrow" viewBox="0 0 100 40" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 7"><path d="M4 30 C 30 2, 60 2, 90 20"/><path d="M80 12 L 92 21 L 79 26" stroke-dasharray="0"/></svg>
+        <div class="hv-card hv-listing">
+          <div class="hv-listing-top">
+            <span class="hv-ai"><svg class="i"><use href="#i-sparkle"/></svg> Written by AI · 12s</span>
+            <span class="badge badge-green">Live</span>
+          </div>
+          <h4>Tangail Handloom Cotton Saree</h4>
+          <div class="bn" lang="bn">টাঙ্গাইলের হাতে বোনা সুতি শাড়ি</div>
+          <div class="hv-price"><strong>৳1,450</strong><s>৳1,850</s><span class="badge badge-orange">-22%</span></div>
+          <div class="hv-lines"><span></span><span></span><span></span></div>
+          <div class="hv-tags"><span>saree</span><span>handloom</span><span>eid collection</span><span>tangail</span></div>
+          <div class="hv-variants"><span>S</span><span class="on">M</span><span>L</span><span>XL</span></div>
+        </div>
+        <div class="hv-card hv-chip hv-order">
+          <span class="ic"><svg class="i"><use href="#i-bag"/></svg></span>
+          <span><b>New order · ৳1,510</b><small>Paid via bKash · Pathao</small></span>
+        </div>
+        <div class="hv-card hv-chip hv-risk">
+          <span class="ic"><svg class="i"><use href="#i-shield"/></svg></span>
+          <span><b>Risk score: Low</b><small>OTP verified buyer</small></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="hero-stats">
+      {% for s in c.HERO_STATS %}
+      <div class="hero-stat reveal reveal-d{{ forloop.counter0 }}"><strong>{{ s.value }}</strong><span>{{ s.label }}</span></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTEGRATIONS ============ -->
+<div class="strip">
+  <div class="container strip-inner">
+    <p class="strip-label">Built in — no apps, no extra fees</p>
+    <div class="marquee">
+      <div class="marquee-track">
+        {% for name in c.INTEGRATIONS %}<span>{{ name }}</span>{% endfor %}
+        {% for name in c.INTEGRATIONS %}<span aria-hidden="true">{{ name }}</span>{% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PROBLEM ============ -->
+<section class="section">
+  <div class="container problem">
+    <div class="reveal">
+      <span class="eyebrow">The problem</span>
+      <h2 style="font-size:clamp(2rem,4.2vw,3.1rem);margin-top:.9rem">Sellers run real businesses from a Messenger inbox.</h2>
+      <p class="muted" style="margin-top:1rem;font-size:1.1rem">Most online selling in Bangladesh happens on Facebook, not on websites. Orders are taken by chat, copied into notebooks or Excel — and fake COD orders eat the profit.</p>
+      <div class="problem-quote">The result: hours of manual order taking, fake orders and returns, and no customer data the seller truly owns.</div>
+    </div>
+    <div>
+      <div class="problem-stats">
+        {% for s in c.PROBLEM_STATS %}
+        <div class="stat-card reveal reveal-d{{ forloop.counter }}{% if forloop.last %} dark{% endif %}"><strong>{{ s.value }}</strong><p>{{ s.label }}</p></div>
+        {% endfor %}
+      </div>
+      <p class="source"><strong>Sources:</strong> {{ c.PROBLEM_SOURCES }}</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SNAP & SELL ============ -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="split-head">
+      <div class="section-head reveal">
+        <span class="eyebrow on-dark">Our AI edge</span>
+        <h2>Take a photo. AI does the rest.</h2>
+        <p>From phone camera to a finished product page in under a minute — in Bangla and English.</p>
+      </div>
+      <a href="{% url 'core:snap' %}#try" class="btn btn-primary reveal">Try it free <svg class="i"><use href="#i-arrow-right"/></svg></a>
+    </div>
+    <div class="steps">
+      {% for s in c.SNAP_STEPS %}
+      <div class="step reveal reveal-d{{ forloop.counter }}">
+        <div class="step-n">{{ s.n }}</div>
+        <h3>{{ s.title }}</h3>
+        <p>{{ s.text }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="snap-after reveal">
+      <span class="icon-tile orange"><svg class="i"><use href="#i-chat"/></svg></span>
+      <p>Then a <strong>24/7 AI sales assistant</strong> answers buyers and takes orders on your store, Messenger and WhatsApp — in Bangla.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULES ============ -->
+<section class="section">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">The solution</span>
+      <h2>One subscription runs the whole store.</h2>
+      <p>Multi-tenant and white-labelled: every brand gets its own store, managed from one dashboard and mobile app.</p>
+    </div>
+    <div class="grid grid-4">
+      {% for m in c.MODULES %}
+      <article class="card card-hover reveal reveal-d{{ forloop.counter0|divisibleby:2|yesno:'1,2' }}">
+        <span class="icon-tile{% if forloop.counter == 2 %} orange{% endif %}"><svg class="i"><use href="#i-{{ m.icon }}"/></svg></span>
+        <h3>{{ m.title }}</h3>
+        <p>{{ m.text }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <div style="text-align:center;margin-top:2.5rem" class="reveal"><a href="{% url 'core:features' %}" class="link">Explore every feature <svg class="i i-sm"><use href="#i-arrow-right"/></svg></a></div>
+  </div>
+</section>
+
+<!-- ============ PAIN → FIX ============ -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Seller pain points</span>
+      <h2>What's broken today, and how we fix it.</h2>
+      <p>The complaints we heard in our research and see in competitor reviews — each with a direct product answer.</p>
+    </div>
+    <div class="fix-table reveal">
+      <div class="fix-row head"><span>Pain point</span><span></span><span>Our fix</span></div>
+      {% for pain, fix in c.PAIN_POINTS %}
+      <div class="fix-row">
+        <span class="fix-pain"><svg class="i"><use href="#i-x-circle"/></svg>{{ pain }}</span>
+        <span class="fix-arrow"><svg class="i"><use href="#i-arrow-right"/></svg></span>
+        <span class="fix-fix"><svg class="i"><use href="#i-check-circle"/></svg>{{ fix }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY NOW ============ -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow on-dark">Why now</span>
+      <h2>Buyers and payments are already digital.</h2>
+      <p>Mobile money transactions grew 32.6% in one year. When Facebook was restricted in 2024, sellers lost sales overnight — owning your store now matters.</p>
+    </div>
+    <div class="grid grid-4">
+      {% for s in c.DIGITAL_STATS %}
+      <div class="stat-card reveal reveal-d{{ forloop.counter0 }}"><strong class="{% if forloop.last %}grad-text{% endif %}">{{ s.value }}</strong><p>{{ s.label }}</p></div>
+      {% endfor %}
+    </div>
+    <p class="source muted"><strong>Sources:</strong> {{ c.DIGITAL_SOURCES }}</p>
+  </div>
+</section>
+
+<!-- ============ USP ============ -->
+<section class="section">
+  <div class="container">
+    <div class="split-head">
+      <div class="section-head reveal">
+        <span class="eyebrow">Why sellers switch</span>
+        <h2>Eight reasons to choose {{ BRAND.name }}.</h2>
+      </div>
+      <div class="usp-legend reveal">
+        <span><i style="background:var(--saffron)"></i> What no local competitor offers together</span>
+        <span><i style="background:var(--emerald)"></i> Done better than competitors</span>
+      </div>
+    </div>
+    <div class="grid grid-4">
+      {% for u in c.USPS %}
+      <article class="usp-card card-hover reveal reveal-d{{ forloop.counter0|divisibleby:2|yesno:'1,2' }}" data-tone="{{ u.tone }}">
+        <span class="icon-tile"><svg class="i"><use href="#i-{{ u.icon }}"/></svg></span>
+        <h3>{{ u.title }}</h3>
+        <p>{{ u.text }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="section section-alt" id="pricing">
+  <div class="container">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Pricing</span>
+      <h2>Freemium, with unlimited orders on every paid plan.</h2>
+      <p>Prices in BDT. Annual plans give you 2 months free.</p>
+    </div>
+    {% include "partials/pricing_cards.html" %}
+    <div style="text-align:center;margin-top:2rem" class="reveal"><a href="{% url 'core:compare' %}" class="link">See how we compare to Zatiq, Storola, StoreX and Shopify <svg class="i i-sm"><use href="#i-arrow-right"/></svg></a></div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="section">
+  <div class="container faq-layout">
+    <div class="section-head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2>Questions sellers ask us.</h2>
+      <p>Still curious? Our team replies 7 days a week in Bangla and English.</p>
+      <div style="margin-top:1.5rem"><a href="{% url 'core:help' %}" class="link">Visit the help center <svg class="i i-sm"><use href="#i-arrow-right"/></svg></a></div>
+    </div>
+    <div class="reveal">{% include "partials/faq_list.html" %}</div>
+  </div>
+</section>
+
+{% include "partials/cta_band.html" %}
+<div style="height:clamp(48px,7vw,80px)"></div>
+{% endblock %}

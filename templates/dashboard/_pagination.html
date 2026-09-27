@@ -1,0 +1,10 @@
+{% load shop %}
+{% if page.paginator.num_pages > 1 %}
+<div class="pagination">
+  <span>Showing {{ page.start_index }}–{{ page.end_index }} of {{ page.paginator.count }}</span>
+  <span class="pages">
+    {% if page.has_previous %}<a class="btn btn-ghost btn-sm" href="{% query page=page.previous_page_number %}"><svg class="i i-sm"><use href="#i-arrow-left"/></svg> Prev</a>{% endif %}
+    {% if page.has_next %}<a class="btn btn-ghost btn-sm" href="{% query page=page.next_page_number %}">Next <svg class="i i-sm"><use href="#i-arrow-right"/></svg></a>{% endif %}
+  </span>
+</div>
+{% endif %}

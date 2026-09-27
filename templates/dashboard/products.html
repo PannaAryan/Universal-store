@@ -1,0 +1,53 @@
+{% extends "dashboard/base.html" %}
+{% load shop %}
+{% block page_title %}Products{% endblock %}
+{% block dash %}
+<div class="page-head">
+  <div><h1>Products</h1><p>{{ page.paginator.count }} product{{ page.paginator.count|pluralize }} in your catalog.</p></div>
+  <div class="actions"><a href="{% url 'dashboard:product_add' %}" class="btn btn-primary"><svg class="i i-sm"><use href="#i-camera"/></svg> Snap &amp; Sell</a></div>
+</div>
+<div class="tabs">
+  <a href="?" class="{% if filter == 'all' %}active{% endif %}">All</a>
+  <a href="?filter=low" class="{% if filter == 'low' %}active{% endif %}">Low stock</a>
+  <a href="?filter=ai" class="{% if filter == 'ai' %}active{% endif %}">AI-written</a>
+  <a href="?filter=hidden" class="{% if filter == 'hidden' %}active{% endif %}">Hidden</a>
+</div>
+<div class="toolbar">
+  <form method="get"><input type="hidden" name="filter" value="{{ filter }}"><input class="input" type="search" name="q" value="{{ q }}" placeholder="Search by title, SKU or tag" style="flex:1;padding:0 1rem;border:1px solid var(--line-strong);background:var(--surface)"><button class="btn btn-dark btn-sm" style="height:42px">Search</button></form>
+</div>
+<section class="panel">
+  {% if page.object_list %}
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Product</th><th>Category</th><th class="num">Price</th><th class="num">Stock</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        {% for p in page %}
+        <tr>
+          <td><a href="{% url 'dashboard:product_edit' p.pk %}" class="cell-product row-link">
+            <span class="thumb {{ p|thumb_class }}">{% if p.image %}<img src="{{ p.image.url }}" alt="">{% else %}{{ p.initials }}{% endif %}</span>
+            <span><b>{{ p.title }}</b><small>{% if p.sku %}SKU {{ p.sku }} · {% endif %}{% if p.ai_generated %}<span style="color:var(--saffron-600)">✦ AI-written</span>{% else %}Manual{% endif %}</small></span>
+          </a></td>
+          <td class="muted">{{ p.category|default:"—" }}</td>
+          <td class="num"><strong>{{ p.price|taka }}</strong>{% if p.compare_at_price %}<br><small class="muted"><s>{{ p.compare_at_price|taka }}</s></small>{% endif %}</td>
+          <td class="num">{% if p.stock == 0 %}<span class="badge badge-red">Out</span>{% elif p.is_low_stock %}<span class="badge badge-yellow">{{ p.stock }}</span>{% else %}{{ p.stock }}{% endif %}</td>
+          <td>{% if p.is_active %}<span class="badge badge-green"><span class="dot"></span> Live</span>{% else %}<span class="badge">Hidden</span>{% endif %}</td>
+          <td class="num" style="white-space:nowrap">
+            <a href="{{ p.get_absolute_url }}" target="_blank" class="btn btn-ghost btn-sm" title="View in store" aria-label="View in store"><svg class="i i-sm"><use href="#i-eye"/></svg></a>
+            <a href="{% url 'dashboard:product_edit' p.pk %}" class="btn btn-ghost btn-sm" aria-label="Edit"><svg class="i i-sm"><use href="#i-edit"/></svg></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "dashboard/_pagination.html" %}
+  {% else %}
+  <div class="empty">
+    <span class="icon-tile orange"><svg class="i i-lg"><use href="#i-camera"/></svg></span>
+    <h3>{% if q or filter != 'all' %}No products match{% else %}Add your first product{% endif %}</h3>
+    <p>Snap a photo, add a price, and AI writes the whole listing in Bangla and English.</p>
+    <a href="{% url 'dashboard:product_add' %}" class="btn btn-primary">Snap &amp; Sell</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Page not found — {{ BRAND.name }}{% endblock %}
+{% block nav %}{% endblock %}
+{% block content %}
+<div class="not-found">
+  <div>
+    <a href="{% url 'core:home' %}" class="logo" style="justify-content:center;margin-bottom:2rem">{% include "partials/logo.html" %}</a>
+    <div class="big grad-text">404</div>
+    <h1 style="font-size:1.8rem;margin-top:1rem">This page is out of stock.</h1>
+    <p class="muted" style="margin-top:.6rem">The link may be broken or the page may have moved.</p>
+    <div class="hero-ctas" style="justify-content:center"><a href="{% url 'core:home' %}" class="btn btn-primary">Back to home</a><a href="{% url 'core:help' %}" class="btn btn-ghost">Get help</a></div>
+  </div>
+</div>
+{% endblock %}

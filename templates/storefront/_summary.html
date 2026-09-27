@@ -1,0 +1,21 @@
+{% load shop %}
+<section class="panel">
+  <div class="panel-head"><h2>Your order</h2><a href="{% url 'storefront:cart' store.slug %}" class="link" style="color:var(--brand);font-size:.88rem">Edit bag</a></div>
+  <div class="panel-body">
+    <div style="display:grid;gap:.8rem;margin-bottom:1.2rem">
+      {% for line in lines %}
+      <div style="display:flex;gap:.8rem;align-items:center">
+        <span class="p-media" style="width:52px;border-radius:12px;flex:none">{% if line.product.image %}<img src="{{ line.product.image.url }}" alt="">{% else %}<span class="p-placeholder {{ line.product|thumb_class }}" style="font-size:.9rem">{{ line.product.initials }}</span>{% endif %}</span>
+        <span style="flex:1;min-width:0;font-size:.9rem"><b style="display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ line.product.title }}</b><span class="muted">{% if line.variant %}{{ line.variant }} · {% endif %}Qty {{ line.quantity }}</span></span>
+        <strong style="font-size:.92rem">{{ line.line_total|taka }}</strong>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="kv">
+      <div><span>Subtotal</span><span>{{ quote.subtotal|taka }}</span></div>
+      {% if quote.discount %}<div><span>Discount{% if coupon %} · {{ coupon.code }}{% endif %}</span><span style="color:var(--emerald)">−{{ quote.discount|taka }}</span></div>{% endif %}
+      <div><span>Delivery</span><span data-fee>{{ quote.delivery_fee|taka }}</span></div>
+      <div class="total"><span>Total</span><span data-total>{{ quote.total|taka }}</span></div>
+    </div>
+  </div>
+</section>
